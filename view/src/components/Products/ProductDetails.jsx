@@ -1,13 +1,14 @@
-// FILE: src/components/Products/ProductDetails.jsx
+// src/components/Products/ProductDetails.jsx
 import React, { useState, useEffect } from "react";
 import { Toaster, toast } from "sonner";
 import { useParams } from "react-router-dom";
 import axios from "axios";
 import { useCart } from "../../context/CartContext";
 
+const BASE_URL = "https://shopit-56mz.onrender.com";
+
 function ProductDetails() {
   const { id } = useParams();
-
   const [product, setProduct] = useState(null);
   const [mainImage, setMainImage] = useState("");
   const [selectedSize, setSelectedSize] = useState("");
@@ -15,29 +16,18 @@ function ProductDetails() {
   const [quantity, setQuantity] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
-
   const { addToCart } = useCart();
 
   useEffect(() => {
     const fetchProduct = async () => {
       try {
-        const res = await axios.get(`http://localhost:5000/api/products/${id}`);
+        const res = await axios.get(`${BASE_URL}/api/products/${id}`);
         const productData = res.data;
-        
+
         setProduct(productData);
-        
-        // Set first image as main image
-        if (productData.image && productData.image.length > 0) {
-          setMainImage(productData.image[0]);
-        }
-        
-        // Auto-select first size and color
-        if (productData.sizes && productData.sizes.length > 0) {
-          setSelectedSize(productData.sizes[0]);
-        }
-        if (productData.colors && productData.colors.length > 0) {
-          setSelectedColor(productData.colors[0]);
-        }
+        if (productData.image?.length > 0) setMainImage(productData.image[0]);
+        if (productData.sizes?.length > 0) setSelectedSize(productData.sizes[0]);
+        if (productData.colors?.length > 0) setSelectedColor(productData.colors[0]);
       } catch (err) {
         console.error("Error fetching product:", err);
         setError("Failed to load product");
@@ -69,21 +59,20 @@ function ProductDetails() {
     toast.success("Added to cart!");
   };
 
-  if (loading) {
+  if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="animate-spin rounded-full h-16 w-16 border-t-2 border-b-2 border-black"></div>
       </div>
     );
-  }
 
-  if (error) {
+  if (error)
     return (
       <div className="flex items-center justify-center min-h-screen">
         <div className="text-center">
           <p className="text-red-500 text-xl mb-4">{error}</p>
-          <button 
-            onClick={() => window.location.reload()} 
+          <button
+            onClick={() => window.location.reload()}
             className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800"
           >
             Try Again
@@ -91,21 +80,18 @@ function ProductDetails() {
         </div>
       </div>
     );
-  }
 
   if (!product) return null;
 
   return (
     <>
       <Toaster position="top-right" richColors />
-
       <div className="container mx-auto p-6 my-8">
         <div className="max-w-7xl mx-auto bg-white rounded-xl shadow-lg p-8">
           <div className="flex flex-col lg:flex-row gap-8">
-            {/* Left Side - Images */}
+            {/* Images */}
             <div className="lg:w-1/2 flex flex-col-reverse lg:flex-row gap-4">
-              {/* Thumbnail Images - Only show if multiple images */}
-              {product.image && product.image.length > 1 && (
+              {product.image?.length > 1 && (
                 <div className="flex lg:flex-col gap-3 overflow-x-auto lg:overflow-y-auto">
                   {product.image.map((imgUrl, idx) => (
                     <img
@@ -118,41 +104,37 @@ function ProductDetails() {
                           : "border-gray-300 hover:border-gray-500"
                       }`}
                       onClick={() => setMainImage(imgUrl)}
-                      onError={(e) => {
-                        e.target.src = "https://placehold.co/100x100?text=No+Image";
-                      }}
+                      onError={(e) =>
+                        (e.target.src = "https://placehold.co/100x100?text=No+Image")
+                      }
                     />
                   ))}
                 </div>
               )}
-
-              {/* Main Image - Fixed aspect ratio */}
               <div className="flex-1 flex items-center justify-center bg-gray-50 rounded-xl overflow-hidden">
                 <img
                   src={mainImage}
                   alt={product.name}
                   className="w-full h-full object-cover aspect-square"
-                  onError={(e) => {
-                    e.target.src = "https://placehold.co/600x600?text=No+Image";
-                  }}
+                  onError={(e) =>
+                    (e.target.src = "https://placehold.co/600x600?text=No+Image")
+                  }
                 />
               </div>
             </div>
 
-            {/* Right Side - Product Info */}
+            {/* Product Info */}
             <div className="lg:w-1/2 flex flex-col">
               <h1 className="text-3xl lg:text-4xl font-bold mb-3 text-gray-900">
                 {product.name}
               </h1>
 
-              {/* Brand */}
               {product.brand && (
                 <p className="text-gray-500 mb-3 text-sm uppercase tracking-wide">
                   {product.brand}
                 </p>
               )}
 
-              {/* Price Section */}
               <div className="flex items-center gap-4 mb-4">
                 <p className="text-3xl font-bold text-black">
                   ${product.price?.toFixed(2)}
@@ -163,19 +145,19 @@ function ProductDetails() {
                       ${product.originalPrice.toFixed(2)}
                     </p>
                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                      {Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)}% OFF
+                      {Math.round(
+                        ((product.originalPrice - product.price) / product.originalPrice) *
+                          100
+                      )}
+                      % OFF
                     </span>
                   </>
                 )}
               </div>
 
-              {/* Description */}
-              <p className="text-gray-600 mb-6 leading-relaxed">
-                {product.description}
-              </p>
+              <p className="text-gray-600 mb-6 leading-relaxed">{product.description}</p>
 
-              {/* Color Selection */}
-              {product.colors && product.colors.length > 0 && (
+              {product.colors?.length > 0 && (
                 <div className="mb-6">
                   <p className="font-semibold text-gray-900 mb-3">
                     Color: <span className="font-normal text-gray-600">{selectedColor}</span>
@@ -198,8 +180,7 @@ function ProductDetails() {
                 </div>
               )}
 
-              {/* Size Selection */}
-              {product.sizes && product.sizes.length > 0 && (
+              {product.sizes?.length > 0 && (
                 <div className="mb-6">
                   <p className="font-semibold text-gray-900 mb-3">
                     Size: <span className="font-normal text-gray-600">{selectedSize}</span>
@@ -222,7 +203,6 @@ function ProductDetails() {
                 </div>
               )}
 
-              {/* Quantity Selection */}
               <div className="mb-8">
                 <p className="font-semibold text-gray-900 mb-3">Quantity:</p>
                 <div className="flex items-center space-x-4">
@@ -247,44 +227,12 @@ function ProductDetails() {
                 </div>
               </div>
 
-              {/* Add to Cart Button */}
               <button
                 onClick={handleAddToCart}
                 className="bg-black text-white w-full py-4 rounded-lg font-semibold text-lg hover:bg-gray-800 transition-colors mb-6"
               >
                 Add to Cart
               </button>
-
-              {/* Product Details */}
-              <div className="mt-6 pt-6 border-t border-gray-200">
-                <h3 className="font-bold text-xl mb-4">Product Details</h3>
-                <div className="space-y-3">
-                  {product.brand && (
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600 font-medium">Brand:</span>
-                      <span className="text-gray-900">{product.brand}</span>
-                    </div>
-                  )}
-                  {product.material && (
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600 font-medium">Material:</span>
-                      <span className="text-gray-900">{product.material}</span>
-                    </div>
-                  )}
-                  {product.category && (
-                    <div className="flex justify-between py-2 border-b border-gray-100">
-                      <span className="text-gray-600 font-medium">Category:</span>
-                      <span className="text-gray-900 capitalize">{product.category}</span>
-                    </div>
-                  )}
-                  {product.subCategory && (
-                    <div className="flex justify-between py-2">
-                      <span className="text-gray-600 font-medium">Sub Category:</span>
-                      <span className="text-gray-900 capitalize">{product.subCategory}</span>
-                    </div>
-                  )}
-                </div>
-              </div>
             </div>
           </div>
         </div>
