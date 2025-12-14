@@ -1,7 +1,7 @@
 const fetch = require('node-fetch');
 
 const getAccessToken = async () => {
-  const client = process.env.PAYPAL_CLIENT_ID;
+  const client = process.env.REACT_PAYPAL_CLIENT_ID;
   const secret = process.env.PAYPAL_CLIENT_SECRET;
   const auth = Buffer.from(`${client}:${secret}`).toString('base64');
   const res = await fetch('https://api-m.sandbox.paypal.com/v1/oauth2/token', {
