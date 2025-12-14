@@ -1,4 +1,4 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:5000/api';
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:5000/api';
 
 // Helper function for API calls
 const apiCall = async (endpoint, options = {}) => {
@@ -30,7 +30,7 @@ const apiCall = async (endpoint, options = {}) => {
   }
 };
 
-// PRODUCT API — FIXED ✔
+// PRODUCT API
 export const productAPI = {
   getAll: () => apiCall('/products'),
   getById: (id) => apiCall(`/products/${id}`),
@@ -38,7 +38,7 @@ export const productAPI = {
     apiCall(`/products/${category}/${subCategory}`),
 };
 
-// Example orderAPI (unchanged)
+// ORDER API
 export const orderAPI = {
   create: (data) => apiCall('/orders', { method: 'POST', body: JSON.stringify(data) }),
   getMyOrders: () => apiCall('/orders/my'),
@@ -48,10 +48,9 @@ export const orderAPI = {
     apiCall(`/orders/${id}/status`, { method: 'PUT', body: JSON.stringify(data) }),
 };
 
-export const authAPI = {}
-export const cartAPI = {}
+export const authAPI = {};
+export const cartAPI = {};
 
-// Default export (unchanged)
 export default {
   authAPI,
   productAPI,
