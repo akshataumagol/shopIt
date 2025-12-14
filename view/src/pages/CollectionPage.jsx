@@ -1,4 +1,4 @@
-// FILE: src/pages/CollectionPage.jsx
+// src/pages/CollectionPage.jsx
 import React, { useEffect, useRef, useState } from "react";
 import { useParams, useSearchParams } from "react-router-dom";
 import axios from "axios";
@@ -7,6 +7,8 @@ import { IoMdClose } from "react-icons/io";
 import FilterSidebar from "../components/Products/FilterSidebar";
 import ProductGrid from "../components/Products/ProductGrid";
 import SortOptions from "../components/Products/SortOptions";
+
+const BASE_URL = "https://shopit-56mz.onrender.com";
 
 function CollectionPage() {
   const { category, subCategory } = useParams();
@@ -35,7 +37,7 @@ function CollectionPage() {
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        let url = "http://localhost:5000/api/products";
+        let url = `${BASE_URL}/api/products`;
         if (category) url += `/${category}`;
         if (category && subCategory) url += `/${subCategory}`;
 
@@ -76,55 +78,51 @@ function CollectionPage() {
     setFilteredProducts(updatedProducts);
   };
 
-  // Apply sorting whenever searchParams changes
   useEffect(() => {
-    const sortBy = searchParams.get('sortBy');
+    const sortBy = searchParams.get("sortBy");
     if (!sortBy) return;
 
     let sortedProducts = [...filteredProducts];
-    
-    switch(sortBy) {
-      case 'priceAsc':
+
+    switch (sortBy) {
+      case "priceAsc":
         sortedProducts.sort((a, b) => a.price - b.price);
         break;
-      case 'priceDesc':
+      case "priceDesc":
         sortedProducts.sort((a, b) => b.price - a.price);
         break;
-      case 'Popularity':
+      case "Popularity":
         sortedProducts.sort((a, b) => (b.popularity || 0) - (a.popularity || 0));
         break;
       default:
         break;
     }
-    
+
     setFilteredProducts(sortedProducts);
   }, [searchParams]);
 
   return (
     <div className="flex w-full min-h-screen relative">
-      {/* Mobile Overlay */}
       {isSidebarOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black bg-opacity-50 z-40 lg:hidden"
           onClick={() => setIsSidebarOpen(false)}
         />
       )}
 
-      {/* Sidebar */}
-      <div 
+      <div
         ref={sidebarRef}
         className={`
           fixed lg:sticky top-0 left-0 h-screen
           lg:w-1/6 w-80 max-w-[85vw]
           bg-white
           transform transition-transform duration-300 ease-in-out
-          ${isSidebarOpen ? 'translate-x-0' : '-translate-x-full'}
+          ${isSidebarOpen ? "translate-x-0" : "-translate-x-full"}
           lg:translate-x-0
           z-50 lg:z-0
           overflow-y-auto
         `}
       >
-        {/* Close button for mobile */}
         <button
           onClick={toggleSidebar}
           className="lg:hidden absolute top-4 right-4 p-2 hover:bg-gray-100 rounded-full"
@@ -139,16 +137,14 @@ function CollectionPage() {
         />
       </div>
 
-      {/* Main content */}
       <div className="flex-1 lg:w-5/6 w-full p-4 lg:p-6">
-        {/* Mobile filter button */}
         <button
           onClick={toggleSidebar}
           className="lg:hidden mb-4 border border-gray-300 px-4 py-2 rounded-lg flex items-center gap-2 hover:bg-gray-50 transition-colors"
         >
           <FaFilter className="w-4 h-4" />
           <span className="font-medium">Filters</span>
-          {(filteredProducts.length !== products.length) && (
+          {filteredProducts.length !== products.length && (
             <span className="bg-blue-500 text-white text-xs px-2 py-0.5 rounded-full">
               Active
             </span>
