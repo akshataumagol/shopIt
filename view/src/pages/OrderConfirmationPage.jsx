@@ -1,5 +1,8 @@
+// FILE: src/pages/OrderConfirmation.jsx
 import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
+
+const BASE_URL = "https://shopit-56mz.onrender.com";
 
 const OrderConfirmation = () => {
   const { orderId } = useParams();
@@ -9,20 +12,39 @@ const OrderConfirmation = () => {
   useEffect(() => {
     const fetchOrder = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/orders/${orderId}`);
+        const res = await fetch(`${BASE_URL}/api/orders/${orderId}`);
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch order");
+        }
+
         const data = await res.json();
         setOrder(data);
       } catch (err) {
-        console.error(err);
+        console.error("ORDER FETCH ERROR:", err);
       } finally {
         setLoading(false);
       }
     };
-    fetchOrder();
+
+    if (orderId) fetchOrder();
   }, [orderId]);
 
-  if (loading) return <p>Loading order...</p>;
-  if (!order) return <p>Order not found.</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg font-medium">Loading order...</p>
+      </div>
+    );
+  }
+
+  if (!order) {
+    return (
+      <div className="flex justify-center items-center min-h-screen">
+        <p className="text-lg text-red-500">Order not found.</p>
+      </div>
+    );
+  }
 
   const calculateEstimatedDelivery = (date) => {
     const d = new Date(date);
@@ -37,44 +59,65 @@ const OrderConfirmation = () => {
       </h1>
 
       <div className="p-6 rounded-lg border">
-        <div className="flex justify-between mb-6">
-          <h2 className="text-xl font-semibold">Order ID: {order._id}</h2>
+        {/* Order Header */}
+        <div className="flex flex-col md:flex-row md:justify-between mb-6 gap-2">
+          <h2 className="text-xl font-semibold">
+            Order ID: {order._id}
+          </h2>
           <p className="text-gray-500">
-            Order Date: {new Date(order.createdAt).toLocaleDateString()}
+            Order Date:{" "}
+            {new Date(order.createdAt).toLocaleDateString()}
           </p>
         </div>
 
         <p className="text-emerald-700 text-sm mb-6">
-          Estimated Delivery: {calculateEstimatedDelivery(order.createdAt)}
+          Estimated Delivery:{" "}
+          {calculateEstimatedDelivery(order.createdAt)}
         </p>
 
+        {/* Items */}
         {order.items.map((item, idx) => (
           <div
             key={idx}
-            className="flex items-center justify-between mb-4 p-2 border rounded"
+            className="flex items-center justify-between mb-4 p-3 border rounded gap-4"
           >
-            <img src={item.image} className="w-16 h-16 rounded" />
-            <div className="flex-1 ml-4">
+            <img
+              src={item.image}
+              alt={item.name}
+              className="w-16 h-16 rounded object-cover"
+            />
+
+            <div className="flex-1">
               <h4 className="font-semibold">{item.name}</h4>
-              <p className="text-gray-500">{item.color} | {item.size}</p>
+              <p className="text-gray-500 text-sm">
+                {item.color} | {item.size}
+              </p>
             </div>
-            <p>Qty: {item.quantity}</p>
-            <p className="font-medium">${item.price * item.quantity}</p>
+
+            <p className="text-sm">Qty: {item.quantity}</p>
+            <p className="font-medium">
+              ${item.price * item.quantity}
+            </p>
           </div>
         ))}
 
-        <div className="grid grid-cols-2 gap-6 mt-8">
+        {/* Payment & Delivery */}
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
           <div>
             <h4 className="text-lg font-semibold mb-2">Payment</h4>
-            <p>{order.payment.method}</p>
-            <p>Status: {order.payment.status}</p>
+            <p>Method: {order.payment?.method}</p>
+            <p>Status: {order.payment?.status}</p>
           </div>
+
           <div>
             <h4 className="text-lg font-semibold mb-2">Delivery</h4>
-            <p>{order.shippingAddress.address}</p>
-            <p>{order.shippingAddress.city}, {order.shippingAddress.country}</p>
-            <p>{order.shippingAddress.postalCode}</p>
-            <p>{order.shippingAddress.phone}</p>
+            <p>{order.shippingAddress?.address}</p>
+            <p>
+              {order.shippingAddress?.city},{" "}
+              {order.shippingAddress?.country}
+            </p>
+            <p>{order.shippingAddress?.postalCode}</p>
+            <p>{order.shippingAddress?.phone}</p>
           </div>
         </div>
       </div>
