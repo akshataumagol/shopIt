@@ -1,4 +1,3 @@
-// FILE: src/pages/Checkout.jsx
 import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
@@ -9,14 +8,9 @@ const BASE_URL = "https://shopit-56mz.onrender.com";
 function Checkout() {
   const navigate = useNavigate();
   const { cart, clearCart } = useCart();
+
   const [checkoutId, setCheckoutId] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  const subtotal = cart.reduce(
-    (sum, p) => sum + p.price * p.quantity,
-    0
-  );
-
   const [email, setEmail] = useState("");
 
   const [shippingAddress, setShippingAddress] = useState({
@@ -28,6 +22,11 @@ function Checkout() {
     country: "",
     phone: "",
   });
+
+  const subtotal = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity,
+    0
+  );
 
   const handleCreateCheckout = (e) => {
     e.preventDefault();
@@ -68,13 +67,11 @@ function Checkout() {
       if (!res.ok) {
         console.error("ORDER SAVE FAILED:", order);
         alert("Failed to place order");
-        setLoading(false);
         return;
       }
 
       clearCart();
       navigate(`/order-confirmation/${order._id}`);
-
     } catch (error) {
       console.error("CHECKOUT ERROR:", error);
       alert("Something went wrong while placing order");
@@ -84,66 +81,112 @@ function Checkout() {
   };
 
   return (
-    <div className="max-w-5xl mx-auto p-6">
-      <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+    <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
+      {/* LEFT: Checkout Form */}
+      <div>
+        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
-      {/* Shipping Form */}
-      <form
-        onSubmit={handleCreateCheckout}
-        className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6"
-      >
-        {/* Email */}
-        <input
-          type="email"
-          placeholder="Email address"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="p-2 border rounded col-span-full"
-          required
-        />
-
-        {/* Address Fields */}
-        {Object.keys(shippingAddress).map((field) => (
+        <form
+          onSubmit={handleCreateCheckout}
+          className="grid grid-cols-1 md:grid-cols-2 gap-4"
+        >
+          {/* Email */}
           <input
-            key={field}
-            type="text"
-            placeholder={field.replace(/([A-Z])/g, " $1")}
-            value={shippingAddress[field]}
-            onChange={(e) =>
-              setShippingAddress({
-                ...shippingAddress,
-                [field]: e.target.value,
-              })
-            }
-            className="p-2 border rounded"
+            type="email"
+            placeholder="Email address"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            className="p-2 border rounded col-span-full"
             required
           />
-        ))}
 
-        <button
-          type="submit"
-          className="col-span-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
-        >
-          Continue to Payment
-        </button>
-      </form>
+          {/* Shipping Address */}
+          {Object.keys(shippingAddress).map((field) => (
+            <input
+              key={field}
+              type="text"
+              placeholder={field.replace(/([A-Z])/g, " $1")}
+              value={shippingAddress[field]}
+              onChange={(e) =>
+                setShippingAddress({
+                  ...shippingAddress,
+                  [field]: e.target.value,
+                })
+              }
+              className="p-2 border rounded"
+              required
+            />
+          ))}
 
-      {/* Payment */}
-      {checkoutId && (
-        <div className="mt-6">
-          <PayPalButton
-            amount={subtotal}
-            onSuccess={handlePaymentSuccess}
-            disabled={loading}
-          />
-        </div>
-      )}
+          <button
+            type="submit"
+            className="col-span-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+          >
+            Continue to Payment
+          </button>
+        </form>
 
-      {loading && (
-        <p className="mt-4 text-center text-gray-500">
-          Processing your order...
-        </p>
-      )}
+        {/* PayPal */}
+        {checkoutId && (
+          <div className="mt-6">
+            <PayPalButton
+              amount={subtotal}
+              onSuccess={handlePaymentSuccess}
+              disabled={loading}
+            />
+          </div>
+        )}
+
+        {loading && (
+          <p className="mt-4 text-center text-gray-500">
+            Processing your order...
+          </p>
+        )}
+      </div>
+
+      {/* RIGHT: Order Summary */}
+      <div className="bg-gray-50 p-6 rounded-lg h-fit">
+        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+
+        {cart.length === 0 ? (
+          <p className="text-gray-500">Your cart is empty</p>
+        ) : (
+          <>
+            {cart.map((item, index) => (
+              <div
+                key={index}
+                className="flex justify-between items-center border-b py-3"
+              >
+                <div>
+                  <p className="font-medium">{item.name}</p>
+                  <p className="text-sm text-gray-500">
+                    Quantity: {item.quantity}
+                  </p>
+                </div>
+
+                <p className="font-medium">
+                  ₹{item.price * item.quantity}
+                </p>
+              </div>
+            ))}
+
+            <div className="flex justify-between mt-4 text-lg font-semibold">
+              <span>Subtotal</span>
+              <span>₹{subtotal}</span>
+            </div>
+
+            <div className="flex justify-between text-lg">
+              <span>Shipping</span>
+              <span>Free</span>
+            </div>
+
+            <div className="flex justify-between mt-2 text-xl font-bold border-t pt-4">
+              <span>Total</span>
+              <span>₹{subtotal}</span>
+            </div>
+          </>
+        )}
+      </div>
     </div>
   );
 }
