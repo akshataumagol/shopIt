@@ -203,7 +203,7 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
 
-const BASE_URL = import.meta.env.VITE_API_BASE_URL;
+const BASE_URL = "https://shopit-56mz.onrender.com";
 
 function Checkout() {
   const navigate = useNavigate();
