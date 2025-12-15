@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { useParams, useNavigate, Link } from "react-router-dom";
 import { useCart } from "../context/CartContext";
 
-const BASE_URL = "http://localhost:5000"; // Change to your backend URL
+const BASE_URL = "https://shopit-56mz.onrender.com";
 
 const OrderConfirmation = () => {
   const { orderId } = useParams();
