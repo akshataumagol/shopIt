@@ -4,7 +4,7 @@ import { useCart } from "../context/CartContext";
 
 const BASE_URL = "https://shopit-56mz.onrender.com";
 
-const OrderConfirmation = () => {
+const OrderConfirmationPage = () => {
   const { orderId } = useParams();
   const navigate = useNavigate();
   const { clearCart } = useCart();
@@ -340,4 +340,4 @@ const OrderConfirmation = () => {
   );
 };
 
-export default OrderConfirmation;
+export default OrderConfirmationPage;
