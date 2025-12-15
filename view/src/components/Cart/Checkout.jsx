@@ -50,9 +50,7 @@ function Checkout() {
     try {
       const res = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           shippingAddress,
@@ -65,7 +63,7 @@ function Checkout() {
       const order = await res.json();
 
       if (!res.ok) {
-        console.error("ORDER SAVE FAILED:", order);
+        console.error("ORDER FAILED:", order);
         alert("Failed to place order");
         return;
       }
@@ -74,15 +72,15 @@ function Checkout() {
       navigate(`/order-confirmation/${order._id}`);
     } catch (error) {
       console.error("CHECKOUT ERROR:", error);
-      alert("Something went wrong while placing order");
+      alert("Something went wrong");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div className="max-w-6xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-8">
-      {/* LEFT: Checkout Form */}
+    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
+      {/* LEFT SECTION */}
       <div>
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
@@ -90,17 +88,15 @@ function Checkout() {
           onSubmit={handleCreateCheckout}
           className="grid grid-cols-1 md:grid-cols-2 gap-4"
         >
-          {/* Email */}
           <input
             type="email"
             placeholder="Email address"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
-            className="p-2 border rounded col-span-full"
+            className="p-3 border rounded col-span-full"
             required
           />
 
-          {/* Shipping Address */}
           {Object.keys(shippingAddress).map((field) => (
             <input
               key={field}
@@ -113,20 +109,19 @@ function Checkout() {
                   [field]: e.target.value,
                 })
               }
-              className="p-2 border rounded"
+              className="p-3 border rounded"
               required
             />
           ))}
 
           <button
             type="submit"
-            className="col-span-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+            className="col-span-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
           >
             Continue to Payment
           </button>
         </form>
 
-        {/* PayPal */}
         {checkoutId && (
           <div className="mt-6">
             <PayPalButton
@@ -144,45 +139,55 @@ function Checkout() {
         )}
       </div>
 
-      {/* RIGHT: Order Summary */}
-      <div className="bg-gray-50 p-6 rounded-lg h-fit">
-        <h2 className="text-xl font-semibold mb-4">Order Summary</h2>
+      {/* RIGHT SECTION */}
+      <div className="bg-white border rounded-xl shadow-sm p-6 h-fit">
+        <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
 
         {cart.length === 0 ? (
           <p className="text-gray-500">Your cart is empty</p>
         ) : (
           <>
-            {cart.map((item, index) => (
-              <div
-                key={index}
-                className="flex justify-between items-center border-b py-3"
-              >
-                <div>
-                  <p className="font-medium">{item.name}</p>
-                  <p className="text-sm text-gray-500">
-                    Quantity: {item.quantity}
+            <div className="space-y-4">
+              {cart.map((item, index) => (
+                <div
+                  key={index}
+                  className="flex items-center gap-4 border-b pb-4"
+                >
+                  <img
+                    src={item.image}
+                    alt={item.name}
+                    className="w-20 h-24 object-cover rounded-lg border"
+                  />
+
+                  <div className="flex-1">
+                    <p className="font-semibold">{item.name}</p>
+                    <p className="text-sm text-gray-500">
+                      Quantity: {item.quantity}
+                    </p>
+                  </div>
+
+                  <p className="font-semibold">
+                    ₹{item.price * item.quantity}
                   </p>
                 </div>
+              ))}
+            </div>
 
-                <p className="font-medium">
-                  ₹{item.price * item.quantity}
-                </p>
+            <div className="mt-6 space-y-2 text-lg">
+              <div className="flex justify-between">
+                <span className="text-gray-600">Subtotal</span>
+                <span>₹{subtotal}</span>
               </div>
-            ))}
 
-            <div className="flex justify-between mt-4 text-lg font-semibold">
-              <span>Subtotal</span>
-              <span>₹{subtotal}</span>
-            </div>
+              <div className="flex justify-between">
+                <span className="text-gray-600">Shipping</span>
+                <span className="text-green-600">Free</span>
+              </div>
 
-            <div className="flex justify-between text-lg">
-              <span>Shipping</span>
-              <span>Free</span>
-            </div>
-
-            <div className="flex justify-between mt-2 text-xl font-bold border-t pt-4">
-              <span>Total</span>
-              <span>₹{subtotal}</span>
+              <div className="flex justify-between text-xl font-bold border-t pt-4">
+                <span>Total</span>
+                <span>₹{subtotal}</span>
+              </div>
             </div>
           </>
         )}
