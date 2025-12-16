@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import heroImg1 from '../../assets/rabbit-hero.webp'; // Image 1 (Vacation related)
-import heroImg2 from '../../assets/register.webp'; // Image 2 (New Arrivals or Features)
-import heroImg3 from '../../assets/featured.webp'; // Image 3 (Collections or Categories)
+import heroImg1 from '../../assets/Banner1.webp'; 
+import heroImg2 from '../../assets/Banner2.png';
+import heroImg3 from '../../assets/Banner3.jpg'; 
 
 function Hero() {
     const [currentIndex, setCurrentIndex] = useState(0);
