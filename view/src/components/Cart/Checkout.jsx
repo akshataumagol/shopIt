@@ -12,6 +12,7 @@ function Checkout() {
   const [checkoutId, setCheckoutId] = useState(null);
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
+  const [savedCartItems, setSavedCartItems] = useState([]);
 
   const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
@@ -34,15 +35,31 @@ function Checkout() {
     if (!email) return alert("Please enter email");
     if (!cart.length) return alert("Cart is empty");
 
+    // Save cart items before payment
+    setSavedCartItems([...cart]);
+    console.log("Saved cart items:", cart);
+    
     setCheckoutId(Date.now());
   };
 
   const handlePaymentSuccess = async (paymentDetails) => {
     setLoading(true);
 
+    // Use saved cart items instead of current cart
+    const itemsToSend = savedCartItems.length > 0 ? savedCartItems : cart;
+
+    console.log("Items to send:", itemsToSend);
+    console.log("Items count:", itemsToSend.length);
+
+    if (!itemsToSend || itemsToSend.length === 0) {
+      alert("Cart is empty! Cannot create order.");
+      setLoading(false);
+      return;
+    }
+
     try {
       // Properly format cart items for backend
-      const orderItems = cart.map(item => ({
+      const orderItems = itemsToSend.map(item => ({
         productId: item._id || item.id,
         name: item.name,
         price: item.price,
@@ -52,23 +69,29 @@ function Checkout() {
         color: item.color,
       }));
 
+      console.log("Formatted order items:", orderItems);
+
+      const orderData = {
+        email,
+        shippingAddress,
+        items: orderItems,
+        subtotal,
+        shippingCost: 0,
+        total: subtotal,
+        payment: {
+          method: paymentDetails.method || "PayPal",
+          status: "Paid",
+          transactionId: paymentDetails.id || paymentDetails.transactionId,
+          paidAt: new Date().toISOString(),
+        },
+      };
+
+      console.log("Full order data being sent:", orderData);
+
       const res = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          shippingAddress,
-          items: orderItems,
-          subtotal,
-          shippingCost: 0,
-          total: subtotal,
-          payment: {
-            method: paymentDetails.method || "PayPal",
-            status: "Paid",
-            transactionId: paymentDetails.id || paymentDetails.transactionId,
-            paidAt: new Date().toISOString(),
-          },
-        }),
+        body: JSON.stringify(orderData),
       });
 
       const order = await res.json();
