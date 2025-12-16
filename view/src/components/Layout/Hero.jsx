@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import heroImg1 from '../../assets/Banner1.webp'; 
+import heroImg1 from '../../assets/Banner1.png'; 
 import heroImg2 from '../../assets/Banner2.png';
 import heroImg3 from '../../assets/Banner3.jpg'; 
 
