@@ -41,15 +41,33 @@ function Checkout() {
     setLoading(true);
 
     try {
+      // Properly format cart items for backend
+      const orderItems = cart.map(item => ({
+        productId: item._id || item.id,
+        name: item.name,
+        price: item.price,
+        quantity: item.quantity,
+        image: item.image,
+        size: item.size,
+        color: item.color,
+      }));
+
       const res = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           email,
           shippingAddress,
-          items: cart,
+          items: orderItems,
           subtotal,
-          payment: paymentDetails,
+          shippingCost: 0,
+          total: subtotal,
+          payment: {
+            method: paymentDetails.method || "PayPal",
+            status: "Paid",
+            transactionId: paymentDetails.id || paymentDetails.transactionId,
+            paidAt: new Date().toISOString(),
+          },
         }),
       });
 
