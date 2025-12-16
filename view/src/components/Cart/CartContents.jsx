@@ -73,7 +73,7 @@ function CartContents() {
               ${(product.price * product.quantity).toFixed(2)}
             </p>
             <p className="text-sm text-gray-500">
-              ${product.price.toFixed(2)} each
+              ₹{product.price.toFixed(2)} each
             </p>
             <button
               onClick={() =>
