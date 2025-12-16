@@ -80,139 +80,137 @@ function Checkout() {
           <div className="bg-white rounded-2xl shadow-sm p-6 lg:p-8">
             <h1 className="text-3xl font-bold mb-8 text-gray-900">Checkout</h1>
 
-            <div className="space-y-6">
-              {/* Contact Details */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">
-                  Contact Details
-                </h3>
-                <input
-                  type="email"
-                  placeholder="Email address"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                  required
-                />
-              </div>
+            {/* Contact Details */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                Contact Details
+              </h3>
+              <input
+                type="email"
+                placeholder="Email address"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                required
+              />
+            </div>
 
-              {/* Delivery Address */}
-              <div>
-                <h3 className="text-lg font-semibold mb-4 text-gray-800">
-                  Delivery Address
-                </h3>
-                <div className="space-y-4">
-                  <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="First Name"
-                      value={shippingAddress.firstName}
-                      onChange={(e) =>
-                        setShippingAddress({
-                          ...shippingAddress,
-                          firstName: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Last Name"
-                      value={shippingAddress.lastName}
-                      onChange={(e) =>
-                        setShippingAddress({
-                          ...shippingAddress,
-                          lastName: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                      required
-                    />
-                  </div>
-
+            {/* Delivery Address */}
+            <div className="mb-6">
+              <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                Delivery Address
+              </h3>
+              <div className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
                   <input
                     type="text"
-                    placeholder="Address"
-                    value={shippingAddress.address}
+                    placeholder="First Name"
+                    value={shippingAddress.firstName}
                     onChange={(e) =>
                       setShippingAddress({
                         ...shippingAddress,
-                        address: e.target.value,
+                        firstName: e.target.value,
                       })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
                     required
                   />
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <input
-                      type="text"
-                      placeholder="City"
-                      value={shippingAddress.city}
-                      onChange={(e) =>
-                        setShippingAddress({
-                          ...shippingAddress,
-                          city: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                      required
-                    />
-                    <input
-                      type="text"
-                      placeholder="Postal Code"
-                      value={shippingAddress.postalCode}
-                      onChange={(e) =>
-                        setShippingAddress({
-                          ...shippingAddress,
-                          postalCode: e.target.value,
-                        })
-                      }
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                      required
-                    />
-                  </div>
-
                   <input
                     type="text"
-                    placeholder="Country"
-                    value={shippingAddress.country}
+                    placeholder="Last Name"
+                    value={shippingAddress.lastName}
                     onChange={(e) =>
                       setShippingAddress({
                         ...shippingAddress,
-                        country: e.target.value,
-                      })
-                    }
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
-                    required
-                  />
-
-                  <input
-                    type="tel"
-                    placeholder="Phone"
-                    value={shippingAddress.phone}
-                    onChange={(e) =>
-                      setShippingAddress({
-                        ...shippingAddress,
-                        phone: e.target.value,
+                        lastName: e.target.value,
                       })
                     }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
                     required
                   />
                 </div>
-              </div>
 
-              {!checkoutId && (
-                <button
-                  onClick={handleCreateCheckout}
-                  className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-                >
-                  Continue to Payment
-                </button>
-              )}
+                <input
+                  type="text"
+                  placeholder="Address"
+                  value={shippingAddress.address}
+                  onChange={(e) =>
+                    setShippingAddress({
+                      ...shippingAddress,
+                      address: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                  required
+                />
+
+                <div className="grid grid-cols-2 gap-4">
+                  <input
+                    type="text"
+                    placeholder="City"
+                    value={shippingAddress.city}
+                    onChange={(e) =>
+                      setShippingAddress({
+                        ...shippingAddress,
+                        city: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                    required
+                  />
+                  <input
+                    type="text"
+                    placeholder="Postal Code"
+                    value={shippingAddress.postalCode}
+                    onChange={(e) =>
+                      setShippingAddress({
+                        ...shippingAddress,
+                        postalCode: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                    required
+                  />
+                </div>
+
+                <input
+                  type="text"
+                  placeholder="Country"
+                  value={shippingAddress.country}
+                  onChange={(e) =>
+                    setShippingAddress({
+                      ...shippingAddress,
+                      country: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                  required
+                />
+
+                <input
+                  type="tel"
+                  placeholder="Phone"
+                  value={shippingAddress.phone}
+                  onChange={(e) =>
+                    setShippingAddress({
+                      ...shippingAddress,
+                      phone: e.target.value,
+                    })
+                  }
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                  required
+                />
+              </div>
             </div>
+
+            {!checkoutId && (
+              <button
+                onClick={handleCreateCheckout}
+                className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+              >
+                Continue to Payment
+              </button>
+            )}
 
             {checkoutId && (
               <div className="mt-6 space-y-4">
