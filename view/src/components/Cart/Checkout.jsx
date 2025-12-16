@@ -1,4 +1,4 @@
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
@@ -31,15 +31,8 @@ function Checkout() {
   const handleCreateCheckout = (e) => {
     e.preventDefault();
 
-    if (!email) {
-      alert("Please enter email");
-      return;
-    }
-
-    if (!cart.length) {
-      alert("Cart is empty");
-      return;
-    }
+    if (!email) return alert("Please enter email");
+    if (!cart.length) return alert("Cart is empty");
 
     setCheckoutId(Date.now());
   };
@@ -63,15 +56,15 @@ function Checkout() {
       const order = await res.json();
 
       if (!res.ok) {
-        console.error("ORDER FAILED:", order);
+        console.error(order);
         alert("Failed to place order");
         return;
       }
 
       clearCart();
       navigate(`/order-confirmation/${order._id}`);
-    } catch (error) {
-      console.error("CHECKOUT ERROR:", error);
+    } catch (err) {
+      console.error("CHECKOUT ERROR:", err);
       alert("Something went wrong");
     } finally {
       setLoading(false);
@@ -79,118 +72,218 @@ function Checkout() {
   };
 
   return (
-    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
-    
-      <div>
-        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
+    <div className="min-h-screen bg-gray-50 py-8">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          
+          {/* LEFT SIDE - Checkout Form */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 lg:p-8">
+            <h1 className="text-3xl font-bold mb-8 text-gray-900">Checkout</h1>
 
-        <form
-          onSubmit={handleCreateCheckout}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded col-span-full"
-            required
-          />
+            <div className="space-y-6">
+              {/* Contact Details */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                  Contact Details
+                </h3>
+                <input
+                  type="email"
+                  placeholder="Email address"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                  required
+                />
+              </div>
 
-          {Object.keys(shippingAddress).map((field) => (
-            <input
-              key={field}
-              type="text"
-              placeholder={field.replace(/([A-Z])/g, " $1")}
-              value={shippingAddress[field]}
-              onChange={(e) =>
-                setShippingAddress({
-                  ...shippingAddress,
-                  [field]: e.target.value,
-                })
-              }
-              className="p-3 border rounded"
-              required
-            />
-          ))}
+              {/* Delivery Address */}
+              <div>
+                <h3 className="text-lg font-semibold mb-4 text-gray-800">
+                  Delivery Address
+                </h3>
+                <div className="space-y-4">
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      placeholder="First Name"
+                      value={shippingAddress.firstName}
+                      onChange={(e) =>
+                        setShippingAddress({
+                          ...shippingAddress,
+                          firstName: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Last Name"
+                      value={shippingAddress.lastName}
+                      onChange={(e) =>
+                        setShippingAddress({
+                          ...shippingAddress,
+                          lastName: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                      required
+                    />
+                  </div>
 
-          <button
-            type="submit"
-            className="col-span-full bg-black text-white py-3 rounded hover:bg-gray-800 transition"
-          >
-            Continue to Payment
-          </button>
-        </form>
+                  <input
+                    type="text"
+                    placeholder="Address"
+                    value={shippingAddress.address}
+                    onChange={(e) =>
+                      setShippingAddress({
+                        ...shippingAddress,
+                        address: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                    required
+                  />
 
-        {checkoutId && (
-          <div className="mt-6">
-            <PayPalButton
-              amount={subtotal}
-              onSuccess={handlePaymentSuccess}
-              disabled={loading}
-            />
+                  <div className="grid grid-cols-2 gap-4">
+                    <input
+                      type="text"
+                      placeholder="City"
+                      value={shippingAddress.city}
+                      onChange={(e) =>
+                        setShippingAddress({
+                          ...shippingAddress,
+                          city: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                      required
+                    />
+                    <input
+                      type="text"
+                      placeholder="Postal Code"
+                      value={shippingAddress.postalCode}
+                      onChange={(e) =>
+                        setShippingAddress({
+                          ...shippingAddress,
+                          postalCode: e.target.value,
+                        })
+                      }
+                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                      required
+                    />
+                  </div>
+
+                  <input
+                    type="text"
+                    placeholder="Country"
+                    value={shippingAddress.country}
+                    onChange={(e) =>
+                      setShippingAddress({
+                        ...shippingAddress,
+                        country: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                    required
+                  />
+
+                  <input
+                    type="tel"
+                    placeholder="Phone"
+                    value={shippingAddress.phone}
+                    onChange={(e) =>
+                      setShippingAddress({
+                        ...shippingAddress,
+                        phone: e.target.value,
+                      })
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-black focus:border-transparent outline-none transition"
+                    required
+                  />
+                </div>
+              </div>
+
+              {!checkoutId && (
+                <button
+                  onClick={handleCreateCheckout}
+                  className="w-full bg-black text-white py-4 rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+                >
+                  Continue to Payment
+                </button>
+              )}
+            </div>
+
+            {checkoutId && (
+              <div className="mt-6 space-y-4">
+                <h3 className="text-lg font-semibold text-gray-800">
+                  Payment Method
+                </h3>
+                <PayPalButton
+                  amount={subtotal}
+                  onSuccess={handlePaymentSuccess}
+                  disabled={loading}
+                />
+                {loading && (
+                  <p className="text-center text-gray-500">
+                    Processing your order...
+                  </p>
+                )}
+              </div>
+            )}
           </div>
-        )}
 
-        {loading && (
-          <p className="mt-4 text-center text-gray-500">
-            Processing your order...
-          </p>
-        )}
-      </div>
+          {/* RIGHT SIDE - Order Summary */}
+          <div className="bg-white rounded-2xl shadow-sm p-6 lg:p-8 lg:sticky lg:top-8 h-fit">
+            <h2 className="text-2xl font-bold mb-6 text-gray-900">
+              Order Summary
+            </h2>
 
-    
-      <div className="bg-white border rounded-xl shadow-sm p-6 h-fit">
-        <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
-
-        {cart.length === 0 ? (
-          <p className="text-gray-500">Your cart is empty</p>
-        ) : (
-          <>
-            <div className="space-y-4">
-              {cart.map((item, index) => (
+            <div className="space-y-4 mb-6">
+              {cart.map((item, i) => (
                 <div
-                  key={index}
-                  className="flex items-center gap-4 border-b pb-4"
+                  key={i}
+                  className="flex gap-4 pb-4 border-b border-gray-200 last:border-0"
                 >
                   <img
                     src={item.image}
                     alt={item.name}
-                    className="w-20 h-24 object-cover rounded-lg border"
+                    className="w-24 h-28 object-cover rounded-lg"
                   />
-
                   <div className="flex-1">
-                    <p className="font-semibold">{item.name}</p>
-                    <p className="text-sm text-gray-500">
-                      Quantity: {item.quantity}
+                    <h4 className="font-semibold text-gray-900 mb-1">
+                      {item.name}
+                    </h4>
+                    <p className="text-sm text-gray-500 mb-1">
+                      Size: {item.size} | Color: {item.color}
+                    </p>
+                    <p className="text-sm text-gray-600">Qty: {item.quantity}</p>
+                  </div>
+                  <div className="text-right">
+                    <p className="font-semibold text-gray-900">
+                      ₹{(item.price * item.quantity).toLocaleString()}
                     </p>
                   </div>
-
-                  <p className="font-semibold">
-                    ₹{item.price * item.quantity}
-                  </p>
                 </div>
               ))}
             </div>
 
-            <div className="mt-6 space-y-2 text-lg">
-              <div className="flex justify-between">
-                <span className="text-gray-600">Subtotal</span>
-                <span>₹{subtotal}</span>
+            <div className="border-t border-gray-200 pt-4 space-y-2">
+              <div className="flex justify-between text-gray-600">
+                <span>Subtotal</span>
+                <span>₹{subtotal.toLocaleString()}</span>
               </div>
-
-              <div className="flex justify-between">
-                <span className="text-gray-600">Shipping</span>
+              <div className="flex justify-between text-gray-600">
+                <span>Shipping</span>
                 <span className="text-green-600">Free</span>
               </div>
-
-              <div className="flex justify-between text-xl font-bold border-t pt-4">
+              <div className="flex justify-between text-xl font-bold text-gray-900 pt-2 border-t border-gray-200">
                 <span>Total</span>
-                <span>₹{subtotal}</span>
+                <span>₹{subtotal.toLocaleString()}</span>
               </div>
             </div>
-          </>
-        )}
+          </div>
+        </div>
       </div>
     </div>
   );
@@ -198,7 +291,7 @@ function Checkout() {
 
 export default Checkout;
 */
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
@@ -275,7 +368,7 @@ function Checkout() {
 
   return (
     <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
-      {/* LEFT */}
+     
       <div>
         <h1 className="text-3xl font-bold mb-6">Checkout</h1>
 
@@ -328,7 +421,7 @@ function Checkout() {
         )}
       </div>
 
-      {/* RIGHT */}
+     
       <div className="bg-white border rounded-xl shadow-sm p-6">
         <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
 
@@ -350,3 +443,4 @@ function Checkout() {
 }
 
 export default Checkout;
+*/
