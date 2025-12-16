@@ -43,7 +43,7 @@ function Hero() {
                 <p className='text-sm md:text-lg mb-6'>
                     Explore our exclusive collection of travel essentials. Everything you need for the perfect trip!
                 </p>
-                <Link to="/shop" className='bg-white hover:bg-red-700 text-gray-950 px-6 py-3 rounded-sm text-lg'>
+                <Link to="/collection/clothing/men" className='bg-white hover:bg-red-700 text-gray-950 px-6 py-3 rounded-sm text-lg'>
                     Shop Now
                 </Link>
             </div>
