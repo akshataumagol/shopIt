@@ -97,7 +97,7 @@ function ProductDetails() {
                     <img
                       key={idx}
                       src={imgUrl}
-                      alt={`${product.name} ${idx + 1}`}
+                      alt={`₹{product.name} ${idx + 1}`}
                       className={`w-20 h-20 rounded-lg object-cover cursor-pointer border-2 transition-all flex-shrink-0 ${
                         mainImage === imgUrl
                           ? "border-black ring-2 ring-black"
@@ -137,12 +137,12 @@ function ProductDetails() {
 
               <div className="flex items-center gap-4 mb-4">
                 <p className="text-3xl font-bold text-black">
-                  ${product.price?.toFixed(2)}
+                  ₹{product.price?.toFixed(2)}
                 </p>
                 {product.originalPrice && product.originalPrice > product.price && (
                   <>
                     <p className="text-xl line-through text-gray-400">
-                      ${product.originalPrice.toFixed(2)}
+                      ₹{product.originalPrice.toFixed(2)}
                     </p>
                     <span className="bg-red-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
                       {Math.round(
