@@ -4,7 +4,43 @@ const sendEmail = require("../utils/sendEmail");
 const orderEmailTemplate = require("../utils/orderEmailTemplate");
 const router = express.Router();
 
-// CREATE ORDER + SEND EMAIL
+// ⚠️ IMPORTANT: Specific routes MUST come BEFORE dynamic routes like /:id
+// Otherwise Express will treat "test-email" as an ID parameter
+
+// 1️⃣ TEST EMAIL ENDPOINT - FIRST!
+router.get("/test-email", async (req, res) => {
+  console.log("\n====== TESTING EMAIL SYSTEM ======");
+  
+  try {
+    console.log("🧪 Sending test email...");
+    await sendEmail({
+      to: "akshumagol2000@gmail.com",
+      subject: "Test Email from ShopIt",
+      html: "<h1>✅ Email system is working!</h1><p>This is a test email from your ShopIt backend.</p>",
+    });
+    
+    console.log("✅ Test email sent successfully!");
+    res.json({ 
+      success: true, 
+      message: "Test email sent successfully to akshumagol2000@gmail.com",
+      timestamp: new Date().toISOString()
+    });
+    
+  } catch (error) {
+    console.error("❌ TEST EMAIL FAILED");
+    console.error("Error:", error.message);
+    console.error("Full Error:", JSON.stringify(error, Object.getOwnPropertyNames(error), 2));
+    
+    res.status(500).json({ 
+      success: false, 
+      error: error.message,
+      code: error.code,
+      details: error.response || "No additional details"
+    });
+  }
+});
+
+// 2️⃣ CREATE ORDER + SEND EMAIL
 router.post("/", async (req, res) => {
   console.log("====== NEW ORDER REQUEST ======");
   console.log("Request Body:", JSON.stringify(req.body, null, 2));
@@ -62,7 +98,7 @@ router.post("/", async (req, res) => {
       console.error("Error Name:", emailError.name);
       console.error("Error Message:", emailError.message);
       console.error("Error Code:", emailError.code);
-      console.error("Full Error:", JSON.stringify(emailError, null, 2));
+      console.error("Full Error:", JSON.stringify(emailError, Object.getOwnPropertyNames(emailError), 2));
       
       if (emailError.response) {
         console.error("SMTP Response:", emailError.response);
@@ -84,7 +120,7 @@ router.post("/", async (req, res) => {
       console.error("Error Name:", emailError.name);
       console.error("Error Message:", emailError.message);
       console.error("Error Code:", emailError.code);
-      console.error("Full Error:", JSON.stringify(emailError, null, 2));
+      console.error("Full Error:", JSON.stringify(emailError, Object.getOwnPropertyNames(emailError), 2));
       
       if (emailError.response) {
         console.error("SMTP Response:", emailError.response);
@@ -106,7 +142,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// GET SINGLE ORDER
+// 3️⃣ GET SINGLE ORDER - MUST BE LAST! (dynamic route)
 router.get("/:id", async (req, res) => {
   console.log("====== FETCHING ORDER ======");
   console.log("Order ID:", req.params.id);
@@ -124,38 +160,7 @@ router.get("/:id", async (req, res) => {
     
   } catch (error) {
     console.error("❌ Failed to fetch order:", error.message);
-    res.status(500).json({ message: "Failed to fetch order" });
-  }
-});
-
-// TEST EMAIL ENDPOINT - Use this to debug email issues
-router.get("/test-email", async (req, res) => {
-  console.log("\n====== TESTING EMAIL SYSTEM ======");
-  
-  try {
-    console.log("🧪 Sending test email...");
-    await sendEmail({
-      to: "akshumagol2000@gmail.com",
-      subject: "Test Email from ShopIt",
-      html: "<h1>✅ Email system is working!</h1><p>This is a test email.</p>",
-    });
-    
-    console.log("✅ Test email sent successfully!");
-    res.json({ 
-      success: true, 
-      message: "Test email sent successfully to akshumagol2000@gmail.com" 
-    });
-    
-  } catch (error) {
-    console.error("❌ TEST EMAIL FAILED");
-    console.error("Error:", error.message);
-    console.error("Full Error:", JSON.stringify(error, null, 2));
-    
-    res.status(500).json({ 
-      success: false, 
-      error: error.message,
-      details: error 
-    });
+    res.status(500).json({ message: "Failed to fetch order", error: error.message });
   }
 });
 
