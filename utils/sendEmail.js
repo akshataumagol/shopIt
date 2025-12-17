@@ -1,18 +1,18 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp-relay.brevo.com",
-  port: 587,
-  secure: false,
+  host: "smtp.gmail.com",
+  port: 465,
+  secure: true,
   auth: {
-    user: "9e2947001@smtp-brevo.com", 
-    pass: process.env.BREVO_SMTP_KEY,
+    user: process.env.GMAIL_USER,
+    pass: process.env.GMAIL_APP_PASSWORD,
   },
 });
 
 const sendEmail = async ({ to, subject, html }) => {
   await transporter.sendMail({
-    from: '"ShopIt" <akshumagol2000@gmail.com>', 
+    from: `"ShopIt" <${process.env.GMAIL_USER}>`,
     to,
     subject,
     html,
