@@ -5,35 +5,27 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
+/**
+ * CREATE ORDER
+ */
 router.post("/", async (req, res) => {
-  console.log("========================================");
-  console.log("NEW ORDER REQUEST");
-  console.log("Time:", new Date().toISOString());
-  console.log("========================================");
-  
   try {
-    const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
+    const {
+      email,
+      shippingAddress,
+      cart,
+      subtotal,
+      paymentDetails,
+      userId,
+    } = req.body;
 
-    console.log("Received data:");
-    console.log("- Email:", email);
-    console.log("- Cart items:", cart?.length);
-    console.log("- Subtotal:", subtotal);
-    console.log("- Shipping address:", shippingAddress);
-
-    // Validation
-    if (!email || !cart || !cart.length) {
-      console.error("❌ VALIDATION FAILED");
-      return res.status(400).json({ 
+    if (!email || !cart || cart.length === 0) {
+      return res.status(400).json({
         message: "Invalid order data",
-        error: "Email and cart are required" 
       });
     }
 
-    console.log("✓ Validation passed");
-    console.log("Attempting to save to database...");
-
-    // Create order
-    const orderData = {
+    const order = await Order.create({
       userId: userId || null,
       contactEmail: email,
       shippingAddress,
@@ -48,29 +40,19 @@ router.post("/", async (req, res) => {
         payerId: paymentDetails?.payer?.payer_id || "",
         paidAt: new Date(),
       },
-    };
+    });
 
-    console.log("Order data prepared:", JSON.stringify(orderData, null, 2));
+    /* ================= EMAILS ================= */
 
-    const order = await Order.create(orderData);
-
-    console.log("✓✓✓ ORDER SAVED TO DATABASE ✓✓✓");
-    console.log("Order ID:", order._id);
-    console.log("Order email:", order.contactEmail);
-
-    // Try to send emails (but don't fail the order if emails fail)
-    console.log("Attempting to send emails...");
-    
     try {
       await sendEmail({
-        to: email,
+        to: order.contactEmail,
         subject: "Your Order Confirmation",
         html: orderEmailTemplate(order),
       });
       console.log("✓ Customer email sent");
-    } catch (emailError) {
-      console.error("❌ Customer email failed (continuing anyway):");
-      console.error("Email error:", emailError.message);
+    } catch (err) {
+      console.error("❌ Customer email failed:", err.message);
     }
 
     try {
@@ -80,47 +62,33 @@ router.post("/", async (req, res) => {
         html: orderEmailTemplate(order),
       });
       console.log("✓ Admin email sent");
-    } catch (emailError) {
-      console.error("❌ Admin email failed (continuing anyway):");
-      console.error("Email error:", emailError.message);
+    } catch (err) {
+      console.error("❌ Admin email failed:", err.message);
     }
 
-    console.log("========================================");
-    console.log("✓✓✓ ORDER COMPLETED SUCCESSFULLY ✓✓✓");
-    console.log("========================================");
+    /* ========================================== */
 
-    // Return the order
     res.status(201).json(order);
-    
   } catch (error) {
-    console.error("========================================");
-    console.error("❌❌❌ CRITICAL ERROR ❌❌❌");
-    console.error("========================================");
-    console.error("Error Type:", error.name);
-    console.error("Error Message:", error.message);
-    console.error("Error Stack:", error.stack);
-    
-    if (error.name === 'ValidationError') {
-      console.error("Mongoose Validation Error Details:", error.errors);
-    }
-    
-    // Send detailed error to frontend
-    res.status(500).json({ 
+    console.error("❌ Order creation failed:", error);
+    res.status(500).json({
       message: "Failed to create order",
-      error: error.message,
-      errorType: error.name,
-      details: process.env.NODE_ENV === 'production' ? undefined : error.stack
     });
   }
 });
 
+/**
+ * GET SINGLE ORDER
+ */
 router.get("/:id", async (req, res) => {
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
     res.json(order);
   } catch (error) {
-    console.error("Error fetching order:", error);
+    console.error("❌ Fetch order failed:", error);
     res.status(500).json({ message: "Failed to fetch order" });
   }
 });
