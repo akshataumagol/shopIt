@@ -81,7 +81,7 @@ function Checkout() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6">
       
-      {/* LEFT: CHECKOUT FORM */}
+     
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-2xl uppercase mb-6">Checkout</h2>
 
@@ -205,7 +205,7 @@ function Checkout() {
         </form>
       </div>
 
-      {/* RIGHT: ORDER SUMMARY */}
+     
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg mb-4">Order Summary</h3>
 
