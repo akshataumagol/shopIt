@@ -1,4 +1,3 @@
-
 import React from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
 import { useCart } from "../../context/CartContext";
@@ -18,7 +17,7 @@ function CartContents() {
     <div className="p-2">
       {cart.map((product, index) => (
         <div
-          key={`₹{product.productId}-₹{product.size}-₹{product.color}-₹{index}`}
+          key={`${product.productId}-${product.size}-${product.color}-${index}`}
           className="flex justify-between items-start border-b py-4"
         >
           <img
@@ -70,10 +69,10 @@ function CartContents() {
 
           <div className="text-right">
             <p className="font-semibold">
-              ₹{(product.price * product.quantity).toFixed(2)}
+              ${(product.price * product.quantity).toFixed(2)}
             </p>
             <p className="text-sm text-gray-500">
-              ₹{product.price.toFixed(2)} each
+              ${product.price.toFixed(2)} each
             </p>
             <button
               onClick={() =>
