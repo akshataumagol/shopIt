@@ -1,4 +1,4 @@
-const fetch = require('node-fetch');
+/*const fetch = require('node-fetch');
 
 const getAccessToken = async () => {
   const client = process.env.REACT_PAYPAL_CLIENT_ID;
@@ -32,4 +32,87 @@ const captureOrder = async (orderId) => {
   return res.json();
 };
 
-module.exports = { createOrder, captureOrder };
+module.exports = { createOrder, captureOrder };*/
+const axios = require("axios");
+
+const PAYPAL_BASE_URL = "https://api-m.sandbox.paypal.com";
+
+// Get PayPal access token
+const getAccessToken = async () => {
+  const client = process.env.PAYPAL_CLIENT_ID;
+  const secret = process.env.PAYPAL_CLIENT_SECRET;
+
+  if (!client || !secret) {
+    throw new Error("PayPal credentials are missing");
+  }
+
+  const auth = Buffer.from(`${client}:${secret}`).toString("base64");
+
+  const res = await axios.post(
+    `${PAYPAL_BASE_URL}/v1/oauth2/token`,
+    "grant_type=client_credentials",
+    {
+      headers: {
+        Authorization: `Basic ${auth}`,
+        "Content-Type": "application/x-www-form-urlencoded",
+      },
+      timeout: 10000,
+    }
+  );
+
+  return res.data.access_token;
+};
+
+// Create PayPal order
+const createOrder = async (total, currency = "USD") => {
+  const token = await getAccessToken();
+
+  const res = await axios.post(
+    `${PAYPAL_BASE_URL}/v2/checkout/orders`,
+    {
+      intent: "CAPTURE",
+      purchase_units: [
+        {
+          amount: {
+            currency_code: currency,
+            value: total.toFixed(2),
+          },
+        },
+      ],
+    },
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    }
+  );
+
+  return res.data;
+};
+
+// Capture PayPal order
+const captureOrder = async (orderId) => {
+  const token = await getAccessToken();
+
+  const res = await axios.post(
+    `${PAYPAL_BASE_URL}/v2/checkout/orders/${orderId}/capture`,
+    {},
+    {
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
+      timeout: 10000,
+    }
+  );
+
+  return res.data;
+};
+
+module.exports = {
+  createOrder,
+  captureOrder,
+};
+
