@@ -1,19 +1,15 @@
 const orderEmailTemplate = (order) => {
   const itemsHtml = order.items
-    .map((item) => {
-      const name = item.name || item.title || "Product";
-      const quantity = item.quantity || item.qty || 1;
-      const price = item.price || 0;
-
-      return `
-        <tr>
-          <td style="border:1px solid #ddd;padding:8px;">${name}</td>
-          <td style="border:1px solid #ddd;padding:8px;">${quantity}</td>
-          <td style="border:1px solid #ddd;padding:8px;">$${price}</td>
-          <td style="border:1px solid #ddd;padding:8px;">$${price * quantity}</td>
-        </tr>
-      `;
-    })
+    .map(
+      (item) => `
+      <tr>
+        <td style="border:1px solid #ddd;padding:8px;">${item.name}</td>
+        <td style="border:1px solid #ddd;padding:8px;">${item.quantity}</td>
+        <td style="border:1px solid #ddd;padding:8px;">₹${item.price}</td>
+        <td style="border:1px solid #ddd;padding:8px;">₹${item.price * item.quantity}</td>
+      </tr>
+    `
+    )
     .join("");
 
   return `
@@ -37,13 +33,14 @@ const orderEmailTemplate = (order) => {
       </table>
 
       <h3 style="text-align:right;margin-top:20px;">
-        Grand Total: $${order.total}
+        Grand Total: ₹${order.total}
       </h3>
     </div>
   `;
 };
 
 module.exports = orderEmailTemplate;
+
 
 /*const orderEmailTemplate = (order) => {
   console.log("Generating email template for order:", order._id);
