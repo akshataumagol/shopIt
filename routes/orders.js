@@ -5,26 +5,19 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
-/**
- * CREATE ORDER
- */
+// CREATE ORDER + SEND EMAIL
 router.post("/", async (req, res) => {
-  try {
-    const {
-      email,
-      shippingAddress,
-      cart,
-      subtotal,
-      paymentDetails,
-      userId,
-    } = req.body;
+  console.log("Received new order request:", req.body); // DEBUG
 
-    if (!email || !cart || cart.length === 0) {
-      return res.status(400).json({
-        message: "Invalid order data",
-      });
+  try {
+    const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
+
+    if (!email || !cart || !cart.length) {
+      console.warn("Invalid order data"); // DEBUG
+      return res.status(400).json({ message: "Invalid order data" });
     }
 
+    console.log("Creating order in MongoDB..."); // DEBUG
     const order = await Order.create({
       userId: userId || null,
       contactEmail: email,
@@ -42,53 +35,52 @@ router.post("/", async (req, res) => {
       },
     });
 
-    /* ================= EMAILS ================= */
+    console.log("Order created successfully with ID:", order._id); // DEBUG
 
+    // Send emails
     try {
+      console.log(`Sending email to customer: ${email}`); // DEBUG
       await sendEmail({
-        to: order.contactEmail,
+        to: email,
         subject: "Your Order Confirmation",
         html: orderEmailTemplate(order),
       });
-      console.log("✓ Customer email sent");
-    } catch (err) {
-      console.error("❌ Customer email failed:", err.message);
-    }
+      console.log("Customer email sent successfully"); // DEBUG
 
-    try {
+      console.log("Sending email to admin: akshumagol2000@gmail.com"); // DEBUG
       await sendEmail({
         to: "akshumagol2000@gmail.com",
         subject: "New Order Received",
         html: orderEmailTemplate(order),
       });
-      console.log("✓ Admin email sent");
-    } catch (err) {
-      console.error("❌ Admin email failed:", err.message);
+      console.log("Admin email sent successfully"); // DEBUG
+
+    } catch (emailError) {
+      console.error("Email sending failed:", emailError); // DEBUG
     }
 
-    /* ========================================== */
-
     res.status(201).json(order);
+
   } catch (error) {
-    console.error("❌ Order creation failed:", error);
-    res.status(500).json({
-      message: "Failed to create order",
-    });
+    console.error("Order creation failed:", error); // DEBUG
+    res.status(500).json({ message: "Failed to create order" });
   }
 });
 
-/**
- * GET SINGLE ORDER
- */
+// GET SINGLE ORDER
 router.get("/:id", async (req, res) => {
+  console.log("Fetching order with ID:", req.params.id); // DEBUG
+
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
+      console.warn("Order not found"); // DEBUG
       return res.status(404).json({ message: "Order not found" });
     }
+    console.log("Order fetched successfully"); // DEBUG
     res.json(order);
   } catch (error) {
-    console.error("❌ Fetch order failed:", error);
+    console.error("Failed to fetch order:", error); // DEBUG
     res.status(500).json({ message: "Failed to fetch order" });
   }
 });
