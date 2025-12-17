@@ -7,30 +7,32 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
-// TEST EMAIL
+// ===== Test Email Route =====
 router.get("/test-email", async (req, res) => {
   try {
-    await sendEmail({
-      to: "akshumagol2000@gmail.com",
+    const info = await sendEmail({
+      to: "akshataumagol2004@gmail.com", // test email
       subject: "ShopIt Test Email",
       html: "<h2>Email system working ✅</h2>",
     });
-    res.json({ success: true });
+    res.json({ success: true, info });
   } catch (err) {
+    console.error("❌ Test email failed:", err.message);
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-// CREATE ORDER
+// ===== Create Order =====
 router.post("/", async (req, res) => {
   try {
-    const { email, shippingAddress, cart, subtotal, paymentDetails } = req.body;
+    const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
 
     if (!email || !cart || !cart.length) {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
     const order = await Order.create({
+      userId: userId || null,
       contactEmail: email,
       shippingAddress,
       items: cart,
@@ -48,28 +50,30 @@ router.post("/", async (req, res) => {
 
     console.log("✅ ORDER CREATED:", order._id);
 
-    // Send customer email
-    await sendEmail({
-      to: email,
-      subject: "Your ShopIt Order Confirmation",
-      html: orderEmailTemplate(order),
-    });
-
-    // Send admin email
-    await sendEmail({
-      to: "akshumagol2000@gmail.com",
-      subject: `New Order #${order._id}`,
-      html: orderEmailTemplate(order),
-    });
+    // Send emails
+    try {
+      await sendEmail({
+        to: email,
+        subject: "Your ShopIt Order Confirmation",
+        html: orderEmailTemplate(order),
+      });
+      await sendEmail({
+        to: "akshumagol2000@gmail.com",
+        subject: `New Order #${order._id}`,
+        html: orderEmailTemplate(order),
+      });
+    } catch (emailErr) {
+      console.error("❌ Email sending failed:", emailErr.message);
+    }
 
     res.status(201).json(order);
   } catch (err) {
-    console.error("❌ ORDER ERROR:", err);
+    console.error("❌ ORDER ERROR:", err.message);
     res.status(500).json({ message: "Order creation failed", error: err.message });
   }
 });
 
-// GET SINGLE ORDER
+// ===== Get Single Order =====
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
