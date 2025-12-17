@@ -2,21 +2,17 @@ const express = require("express");
 const Order = require("../models/Order");
 const sendEmail = require("../utils/sendEmail");
 const orderEmailTemplate = require("../utils/orderEmailTemplate");
-
 const router = express.Router();
 
 // CREATE ORDER + SEND EMAIL
 router.post("/", async (req, res) => {
   console.log("Received new order request:", req.body); // DEBUG
-
   try {
     const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
-
     if (!email || !cart || !cart.length) {
       console.warn("Invalid order data"); // DEBUG
       return res.status(400).json({ message: "Invalid order data" });
     }
-
     console.log("Creating order in MongoDB..."); // DEBUG
     const order = await Order.create({
       userId: userId || null,
@@ -34,19 +30,18 @@ router.post("/", async (req, res) => {
         paidAt: new Date(),
       },
     });
-
     console.log("Order created successfully with ID:", order._id); // DEBUG
-
+    
     // Send emails
     try {
-      console.log(`Sending email to customer: ${email}`); // DEBUG
+      console.log(`Sending email to customer: ${email}`); // DEBUG - FIXED
       await sendEmail({
         to: email,
         subject: "Your Order Confirmation",
         html: orderEmailTemplate(order),
       });
       console.log("Customer email sent successfully"); // DEBUG
-
+      
       console.log("Sending email to admin: akshumagol2000@gmail.com"); // DEBUG
       await sendEmail({
         to: "akshumagol2000@gmail.com",
@@ -54,13 +49,11 @@ router.post("/", async (req, res) => {
         html: orderEmailTemplate(order),
       });
       console.log("Admin email sent successfully"); // DEBUG
-
     } catch (emailError) {
       console.error("Email sending failed:", emailError); // DEBUG
     }
-
+    
     res.status(201).json(order);
-
   } catch (error) {
     console.error("Order creation failed:", error); // DEBUG
     res.status(500).json({ message: "Failed to create order" });
@@ -70,7 +63,6 @@ router.post("/", async (req, res) => {
 // GET SINGLE ORDER
 router.get("/:id", async (req, res) => {
   console.log("Fetching order with ID:", req.params.id); // DEBUG
-
   try {
     const order = await Order.findById(req.params.id);
     if (!order) {
