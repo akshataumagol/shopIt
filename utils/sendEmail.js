@@ -2,6 +2,11 @@
 const axios = require("axios");
 
 const sendEmail = async ({ to, subject, html }) => {
+  if (!process.env.BREVO_API_KEY) {
+    console.error("❌ BREVO_API_KEY not set in environment variables");
+    throw new Error("BREVO_API_KEY missing");
+  }
+
   try {
     const res = await axios.post(
       "https://api.brevo.com/v3/smtp/email",
