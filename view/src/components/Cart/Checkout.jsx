@@ -3,16 +3,14 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
 
-
 const BASE_URL = "https://shopit-56mz.onrender.com";
+
 function Checkout() {
   const navigate = useNavigate();
   const { cart, clearCart } = useCart();
 
   const [checkoutId, setCheckoutId] = useState(null);
   const [loading, setLoading] = useState(false);
-
-  // ✅ USER EMAIL (IMPORTANT)
   const [email, setEmail] = useState("");
 
   const subtotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
@@ -40,18 +38,20 @@ function Checkout() {
       return;
     }
 
-    setCheckoutId(Date.now()); // simulate checkout start
+    setCheckoutId(Date.now());
   };
 
   const handlePaymentSuccess = async (paymentDetails) => {
     setLoading(true);
     try {
-     const res = await fetch(`${BASE_URL}/api/orders`, {
+      console.log("Sending order to backend...");
+      
+      const res = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          userId: null, // optional
-          email, // ✅ REAL USER EMAIL
+          userId: null,
+          email,
           shippingAddress,
           cart,
           subtotal,
@@ -59,20 +59,26 @@ function Checkout() {
         }),
       });
 
-      const order = await res.json();
+      console.log("Response status:", res.status);
+      
+      const data = await res.json();
+      console.log("Response data:", data);
 
       if (!res.ok) {
-        alert("Failed to save order");
+        // Show the actual error message from backend
+        alert(`Failed to save order: ${data.error || data.message || 'Unknown error'}`);
         setLoading(false);
         return;
       }
 
+      // Success - order was created
+      console.log("Order created successfully:", data._id);
       clearCart();
-      navigate(`/order-confirmation/${order._id}`);
+      navigate(`/order-confirmation/${data._id}`);
+      
     } catch (err) {
       console.error("Order error:", err);
-      alert("Something went wrong");
-    } finally {
+      alert(`Something went wrong: ${err.message}`);
       setLoading(false);
     }
   };
@@ -88,7 +94,7 @@ function Checkout() {
           <h3 className="text-lg mb-4">Contact Details</h3>
 
           <div className="mb-4">
-            <label>Email</label>
+            <label className="block mb-2 font-medium">Email</label>
             <input
               type="email"
               value={email}
@@ -183,7 +189,7 @@ function Checkout() {
             {!checkoutId ? (
               <button
                 type="submit"
-                className="w-full bg-black text-white py-3 rounded"
+                className="w-full bg-black text-white py-3 rounded hover:bg-gray-800"
               >
                 Continue to Payment
               </button>
@@ -196,7 +202,7 @@ function Checkout() {
                   onError={() => alert("Payment failed")}
                 />
                 {loading && (
-                  <p className="text-gray-500 mt-2">Processing...</p>
+                  <p className="text-gray-500 mt-2">Processing your order...</p>
                 )}
               </div>
             )}
@@ -208,30 +214,36 @@ function Checkout() {
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg mb-4">Order Summary</h3>
 
-        {cart.map((product, index) => (
-          <div
-            key={index}
-            className="flex items-start justify-between py-2 border-b"
-          >
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-20 h-24 object-cover mr-4"
-            />
-            <div>
-              <h4 className="font-medium">{product.name}</h4>
-              <p className="text-sm text-gray-500">
-                Qty: {product.quantity}
-              </p>
-            </div>
-            <p>${(product.price * product.quantity).toLocaleString()}</p>
-          </div>
-        ))}
+        {cart.length === 0 ? (
+          <p className="text-gray-500">Your cart is empty</p>
+        ) : (
+          <>
+            {cart.map((product, index) => (
+              <div
+                key={index}
+                className="flex items-start justify-between py-2 border-b"
+              >
+                <img
+                  src={product.image}
+                  alt={product.name}
+                  className="w-20 h-24 object-cover mr-4"
+                />
+                <div className="flex-1">
+                  <h4 className="font-medium">{product.name}</h4>
+                  <p className="text-sm text-gray-500">
+                    Qty: {product.quantity}
+                  </p>
+                </div>
+                <p className="font-medium">${(product.price * product.quantity).toFixed(2)}</p>
+              </div>
+            ))}
 
-        <div className="flex justify-between text-lg mt-4">
-          <p>Total</p>
-          <p>${subtotal.toLocaleString()}</p>
-        </div>
+            <div className="flex justify-between text-lg mt-4 font-bold">
+              <p>Total</p>
+              <p>${subtotal.toFixed(2)}</p>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );
