@@ -3,14 +3,16 @@ import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
 
-const BASE_URL = "https://shopit-56mz.onrender.com";
 
+const BASE_URL = "https://shopit-56mz.onrender.com";
 function Checkout() {
   const navigate = useNavigate();
   const { cart, clearCart } = useCart();
 
   const [checkoutId, setCheckoutId] = useState(null);
   const [loading, setLoading] = useState(false);
+
+  // ✅ USER EMAIL (IMPORTANT)
   const [email, setEmail] = useState("");
 
   const subtotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
@@ -29,7 +31,7 @@ function Checkout() {
     e.preventDefault();
 
     if (!email || !email.includes("@")) {
-      alert("Enter valid email");
+      alert("Please enter a valid email address");
       return;
     }
 
@@ -38,18 +40,18 @@ function Checkout() {
       return;
     }
 
-    setCheckoutId(Date.now());
+    setCheckoutId(Date.now()); // simulate checkout start
   };
 
   const handlePaymentSuccess = async (paymentDetails) => {
     setLoading(true);
-
     try {
-      const res = await fetch(`${BASE_URL}/api/orders`, {
+     const res = await fetch(`${BASE_URL}/api/orders`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          email,
+          userId: null, // optional
+          email, // ✅ REAL USER EMAIL
           shippingAddress,
           cart,
           subtotal,
@@ -60,15 +62,15 @@ function Checkout() {
       const order = await res.json();
 
       if (!res.ok) {
-        console.error(order);
-        alert("Order failed");
+        alert("Failed to save order");
+        setLoading(false);
         return;
       }
 
       clearCart();
       navigate(`/order-confirmation/${order._id}`);
     } catch (err) {
-      console.error(err);
+      console.error("Order error:", err);
       alert("Something went wrong");
     } finally {
       setLoading(false);
@@ -77,45 +79,52 @@ function Checkout() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6">
+      
+      {/* LEFT: CHECKOUT FORM */}
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-2xl uppercase mb-6">Checkout</h2>
 
         <form onSubmit={handleCreateCheckout}>
           <h3 className="text-lg mb-4">Contact Details</h3>
 
-          <input
-            type="email"
-            placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="w-full p-2 border rounded mb-4"
-            required
-          />
+          <div className="mb-4">
+            <label>Email</label>
+            <input
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="w-full p-2 border rounded"
+              required
+            />
+          </div>
 
           <h3 className="text-lg mb-4">Delivery Address</h3>
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <input
+              type="text"
               placeholder="First Name"
               value={shippingAddress.firstName}
               onChange={(e) =>
                 setShippingAddress({ ...shippingAddress, firstName: e.target.value })
               }
-              className="p-2 border rounded"
+              className="w-full p-2 border rounded"
               required
             />
             <input
+              type="text"
               placeholder="Last Name"
               value={shippingAddress.lastName}
               onChange={(e) =>
                 setShippingAddress({ ...shippingAddress, lastName: e.target.value })
               }
-              className="p-2 border rounded"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
           <input
+            type="text"
             placeholder="Address"
             value={shippingAddress.address}
             onChange={(e) =>
@@ -127,26 +136,29 @@ function Checkout() {
 
           <div className="grid grid-cols-2 gap-4 mb-4">
             <input
+              type="text"
               placeholder="City"
               value={shippingAddress.city}
               onChange={(e) =>
                 setShippingAddress({ ...shippingAddress, city: e.target.value })
               }
-              className="p-2 border rounded"
+              className="w-full p-2 border rounded"
               required
             />
             <input
+              type="text"
               placeholder="Postal Code"
               value={shippingAddress.postalCode}
               onChange={(e) =>
                 setShippingAddress({ ...shippingAddress, postalCode: e.target.value })
               }
-              className="p-2 border rounded"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
 
           <input
+            type="text"
             placeholder="Country"
             value={shippingAddress.country}
             onChange={(e) =>
@@ -157,6 +169,7 @@ function Checkout() {
           />
 
           <input
+            type="tel"
             placeholder="Phone"
             value={shippingAddress.phone}
             onChange={(e) =>
@@ -166,189 +179,58 @@ function Checkout() {
             required
           />
 
-          {!checkoutId ? (
-            <button className="w-full bg-black text-white py-3 rounded">
-              Continue to Payment
-            </button>
-          ) : (
-            <PayPalButton
-              amount={subtotal}
-              onSuccess={handlePaymentSuccess}
-            />
-          )}
-
-          {loading && <p className="mt-2 text-gray-500">Processing…</p>}
+          <div className="mt-6">
+            {!checkoutId ? (
+              <button
+                type="submit"
+                className="w-full bg-black text-white py-3 rounded"
+              >
+                Continue to Payment
+              </button>
+            ) : (
+              <div>
+                <h3 className="text-lg mb-4">Pay with PayPal</h3>
+                <PayPalButton
+                  amount={subtotal}
+                  onSuccess={handlePaymentSuccess}
+                  onError={() => alert("Payment failed")}
+                />
+                {loading && (
+                  <p className="text-gray-500 mt-2">Processing...</p>
+                )}
+              </div>
+            )}
+          </div>
         </form>
       </div>
 
+      {/* RIGHT: ORDER SUMMARY */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg mb-4">Order Summary</h3>
 
-        {cart.map((p, i) => (
-          <div key={i} className="flex justify-between mb-2">
-            <span>{p.name} × {p.quantity}</span>
-            <span>${p.price * p.quantity}</span>
-          </div>
-        ))}
-
-        <div className="flex justify-between mt-4 font-bold">
-          <span>Total</span>
-          <span>${subtotal}</span>
-        </div>
-      </div>
-    </div>
-  );
-}
-
-export default Checkout;
-
-
-
-/*import React, { useState } from "react";
-import { useCart } from "../../context/CartContext";
-import { useNavigate } from "react-router-dom";
-import PayPalButton from "./PayPalButton";
-
-const BASE_URL = "https://shopit-56mz.onrender.com";
-
-function Checkout() {
-  const navigate = useNavigate();
-  const { cart, clearCart } = useCart();
-
-  const [checkoutId, setCheckoutId] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [email, setEmail] = useState("");
-
-  const [shippingAddress, setShippingAddress] = useState({
-    firstName: "",
-    lastName: "",
-    address: "",
-    city: "",
-    postalCode: "",
-    country: "",
-    phone: "",
-  });
-
-  const subtotal = cart.reduce(
-    (sum, item) => sum + item.price * item.quantity,
-    0
-  );
-
-  const handleCreateCheckout = (e) => {
-    e.preventDefault();
-
-    if (!email) return alert("Please enter email");
-    if (!cart.length) return alert("Cart is empty");
-
-    setCheckoutId(Date.now());
-  };
-
-  const handlePaymentSuccess = async (paymentDetails) => {
-    setLoading(true);
-
-    try {
-      const res = await fetch(`${BASE_URL}/api/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          email,
-          shippingAddress,
-          items: cart,
-          subtotal,
-          payment: paymentDetails,
-        }),
-      });
-
-      const order = await res.json();
-
-      if (!res.ok) {
-        console.error(order);
-        alert("Failed to place order");
-        return;
-      }
-
-      clearCart();
-
-      // ✅ IMPORTANT: redirect AFTER order created
-      navigate(`/order-confirmation/${order._id}`);
-    } catch (err) {
-      console.error("CHECKOUT ERROR:", err);
-      alert("Something went wrong");
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  return (
-    <div className="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-2 gap-10">
-     
-      <div>
-        <h1 className="text-3xl font-bold mb-6">Checkout</h1>
-
-        <form
-          onSubmit={handleCreateCheckout}
-          className="grid grid-cols-1 md:grid-cols-2 gap-4"
-        >
-          <input
-            type="email"
-            placeholder="Email address"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            className="p-3 border rounded col-span-full"
-            required
-          />
-
-          {Object.keys(shippingAddress).map((field) => (
-            <input
-              key={field}
-              type="text"
-              placeholder={field.replace(/([A-Z])/g, " $1")}
-              value={shippingAddress[field]}
-              onChange={(e) =>
-                setShippingAddress({
-                  ...shippingAddress,
-                  [field]: e.target.value,
-                })
-              }
-              className="p-3 border rounded"
-              required
-            />
-          ))}
-
-          <button
-            type="submit"
-            className="col-span-full bg-black text-white py-3 rounded"
+        {cart.map((product, index) => (
+          <div
+            key={index}
+            className="flex items-start justify-between py-2 border-b"
           >
-            Continue to Payment
-          </button>
-        </form>
-
-        {checkoutId && (
-          <div className="mt-6">
-            <PayPalButton
-              amount={subtotal}
-              onSuccess={handlePaymentSuccess}
-              disabled={loading}
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-20 h-24 object-cover mr-4"
             />
-          </div>
-        )}
-      </div>
-
-     
-      <div className="bg-white border rounded-xl shadow-sm p-6">
-        <h2 className="text-2xl font-semibold mb-6">Order Summary</h2>
-
-        {cart.map((item, i) => (
-          <div key={i} className="flex justify-between mb-2">
-            <span>{item.name} x {item.quantity}</span>
-            <span>₹{item.price * item.quantity}</span>
+            <div>
+              <h4 className="font-medium">{product.name}</h4>
+              <p className="text-sm text-gray-500">
+                Qty: {product.quantity}
+              </p>
+            </div>
+            <p>${(product.price * product.quantity).toLocaleString()}</p>
           </div>
         ))}
 
-        <hr className="my-4" />
-        <div className="flex justify-between font-bold">
-          <span>Total</span>
-          <span>₹{subtotal}</span>
+        <div className="flex justify-between text-lg mt-4">
+          <p>Total</p>
+          <p>${subtotal.toLocaleString()}</p>
         </div>
       </div>
     </div>
@@ -356,4 +238,3 @@ function Checkout() {
 }
 
 export default Checkout;
-*/
