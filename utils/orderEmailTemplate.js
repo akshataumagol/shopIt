@@ -3,130 +3,64 @@ const orderEmailTemplate = (order) => {
     .map(
       (item) => `
       <tr>
-        <td style="border:1px solid #ddd;padding:8px;">${item.name}</td>
-        <td style="border:1px solid #ddd;padding:8px;">${item.quantity}</td>
-        <td style="border:1px solid #ddd;padding:8px;">₹${item.price}</td>
-        <td style="border:1px solid #ddd;padding:8px;">₹${item.price * item.quantity}</td>
+        <td style="border:1px solid #ddd;padding:8px;">${item.name || 'Product'}</td>
+        <td style="border:1px solid #ddd;padding:8px;">${item.quantity || 1}</td>
+        <td style="border:1px solid #ddd;padding:8px;">$${(item.price || 0).toFixed(2)}</td>
+        <td style="border:1px solid #ddd;padding:8px;">$${((item.price || 0) * (item.quantity || 1)).toFixed(2)}</td>
       </tr>
     `
     )
     .join("");
 
   return `
-    <div style="font-family:Arial;max-width:600px;margin:auto;">
-      <h2>Order Confirmation</h2>
-      <p><strong>Order ID:</strong> ${order._id}</p>
-      <p><strong>Email:</strong> ${order.contactEmail}</p>
-
-      <table width="100%" style="border-collapse:collapse;margin-top:20px;">
-        <thead>
-          <tr style="background:#f2f2f2;">
-            <th style="border:1px solid #ddd;padding:8px;">Product</th>
-            <th style="border:1px solid #ddd;padding:8px;">Qty</th>
-            <th style="border:1px solid #ddd;padding:8px;">Price</th>
-            <th style="border:1px solid #ddd;padding:8px;">Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          ${itemsHtml}
-        </tbody>
-      </table>
-
-      <h3 style="text-align:right;margin-top:20px;">
-        Grand Total: ₹${order.total}
-      </h3>
-    </div>
-  `;
-};
-
-module.exports = orderEmailTemplate;
-
-
-/*const orderEmailTemplate = (order) => {
-  console.log("Generating email template for order:", order._id);
-  
-  
-  const items = order.items || [];
-  
-  console.log("Order items count:", items.length);
-  
-  const itemsHtml = items
-    .map((item) => {
-      const name = item.name || "Product";
-      const quantity = item.quantity || 1;
-      const price = item.price || 0;
-      return `
-        <tr>
-          <td style="padding: 8px; border: 1px solid #ddd;">${name}</td>
-          <td style="padding: 8px; border: 1px solid #ddd; text-align: center;">${quantity}</td>
-          <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">$${price.toFixed(2)}</td>
-          <td style="padding: 8px; border: 1px solid #ddd; text-align: right;">$${(price * quantity).toFixed(2)}</td>
-        </tr>
-      `;
-    })
-    .join("");
-  
-  const total = order.total || order.subtotal || 0;
-  
-  return `
     <!DOCTYPE html>
     <html>
     <head>
-      <style>
-        body { font-family: Arial, sans-serif; line-height: 1.6; color: #333; }
-        .container { max-width: 600px; margin: 0 auto; padding: 20px; }
-        h2 { color: #2c3e50; }
-        table { width: 100%; border-collapse: collapse; margin: 20px 0; }
-        th { background-color: #f8f9fa; padding: 12px; text-align: left; border: 1px solid #ddd; }
-        .total-row { background-color: #f8f9fa; font-weight: bold; }
-        .info-section { margin: 20px 0; padding: 15px; background-color: #f8f9fa; border-radius: 5px; }
-      </style>
+      <meta charset="UTF-8">
     </head>
     <body>
-      <div class="container">
-        <h2>🎉 Order Confirmation</h2>
+      <div style="font-family:Arial;max-width:600px;margin:auto;padding:20px;">
+        <h2 style="color:#2c3e50;">🎉 Order Confirmation</h2>
         <p>Thank you for your order!</p>
         
-        <div class="info-section">
-          <strong>Order ID:</strong> ${order._id}<br>
-          <strong>Order Date:</strong> ${new Date(order.createdAt || Date.now()).toLocaleString()}<br>
-          <strong>Email:</strong> ${order.contactEmail}
+        <div style="background:#f8f9fa;padding:15px;border-radius:5px;margin:20px 0;">
+          <p style="margin:5px 0;"><strong>Order ID:</strong> ${order._id}</p>
+          <p style="margin:5px 0;"><strong>Email:</strong> ${order.contactEmail}</p>
+          <p style="margin:5px 0;"><strong>Date:</strong> ${new Date(order.createdAt || Date.now()).toLocaleString()}</p>
         </div>
-        
+
         <h3>Order Details</h3>
-        <table>
+        <table width="100%" style="border-collapse:collapse;margin-top:20px;">
           <thead>
-            <tr>
-              <th>Product</th>
-              <th style="text-align: center;">Quantity</th>
-              <th style="text-align: right;">Price</th>
-              <th style="text-align: right;">Total</th>
+            <tr style="background:#f2f2f2;">
+              <th style="border:1px solid #ddd;padding:8px;text-align:left;">Product</th>
+              <th style="border:1px solid #ddd;padding:8px;text-align:center;">Qty</th>
+              <th style="border:1px solid #ddd;padding:8px;text-align:right;">Price</th>
+              <th style="border:1px solid #ddd;padding:8px;text-align:right;">Total</th>
             </tr>
           </thead>
           <tbody>
             ${itemsHtml}
           </tbody>
-          <tfoot>
-            <tr class="total-row">
-              <td colspan="3" style="padding: 12px; text-align: right; border: 1px solid #ddd;">Order Total:</td>
-              <td style="padding: 12px; text-align: right; border: 1px solid #ddd;">$${total.toFixed(2)}</td>
-            </tr>
-          </tfoot>
         </table>
-        
-        <div class="info-section">
-          <h4>Shipping Address</h4>
-          <p>
+
+        <h3 style="text-align:right;margin-top:20px;">
+          Grand Total: $${(order.total || 0).toFixed(2)}
+        </h3>
+
+        <div style="background:#f8f9fa;padding:15px;border-radius:5px;margin:20px 0;">
+          <h4 style="margin-top:0;">Shipping Address</h4>
+          <p style="margin:5px 0;">
             ${order.shippingAddress?.firstName || ''} ${order.shippingAddress?.lastName || ''}<br>
             ${order.shippingAddress?.address || ''}<br>
             ${order.shippingAddress?.city || ''}, ${order.shippingAddress?.postalCode || ''}<br>
             ${order.shippingAddress?.country || ''}<br>
-            Phone: ${order.shippingAddress?.phone || 'N/A'}
+            <strong>Phone:</strong> ${order.shippingAddress?.phone || 'N/A'}
           </p>
         </div>
-        
-        <p style="margin-top: 30px; color: #666; font-size: 14px;">
-          If you have any questions about your order, please contact us.
+
+        <p style="color:#666;font-size:14px;margin-top:30px;">
+          If you have any questions about your order, please contact us at ${process.env.GMAIL_USER || 'support@shopit.com'}
         </p>
       </div>
     </body>
@@ -135,4 +69,3 @@ module.exports = orderEmailTemplate;
 };
 
 module.exports = orderEmailTemplate;
-*/
