@@ -1,3 +1,4 @@
+// routes/orders.js
 const express = require("express");
 const mongoose = require("mongoose");
 const Order = require("../models/Order");
@@ -6,9 +7,7 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
-/* ===========================
-   TEST EMAIL
-=========================== */
+// TEST EMAIL
 router.get("/test-email", async (req, res) => {
   try {
     await sendEmail({
@@ -16,21 +15,18 @@ router.get("/test-email", async (req, res) => {
       subject: "ShopIt Test Email",
       html: "<h2>Email system working ✅</h2>",
     });
-
     res.json({ success: true });
   } catch (err) {
     res.status(500).json({ success: false, error: err.message });
   }
 });
 
-/* ===========================
-   CREATE ORDER
-=========================== */
+// CREATE ORDER
 router.post("/", async (req, res) => {
   try {
     const { email, shippingAddress, cart, subtotal, paymentDetails } = req.body;
 
-    if (!email || !cart || cart.length === 0) {
+    if (!email || !cart || !cart.length) {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
@@ -50,35 +46,30 @@ router.post("/", async (req, res) => {
       },
     });
 
-    console.log("✅ ORDER SAVED:", order._id);
+    console.log("✅ ORDER CREATED:", order._id);
 
-    // ✅ NON-BLOCKING EMAILS (IMPORTANT)
-    sendEmail({
+    // Send customer email
+    await sendEmail({
       to: email,
       subject: "Your ShopIt Order Confirmation",
       html: orderEmailTemplate(order),
-    }).catch((err) =>
-      console.error("❌ Customer email failed:", err.message)
-    );
+    });
 
-    sendEmail({
+    // Send admin email
+    await sendEmail({
       to: "akshumagol2000@gmail.com",
       subject: `New Order #${order._id}`,
       html: orderEmailTemplate(order),
-    }).catch((err) =>
-      console.error("❌ Admin email failed:", err.message)
-    );
+    });
 
     res.status(201).json(order);
   } catch (err) {
     console.error("❌ ORDER ERROR:", err);
-    res.status(500).json({ message: "Order creation failed" });
+    res.status(500).json({ message: "Order creation failed", error: err.message });
   }
 });
 
-/* ===========================
-   GET SINGLE ORDER
-=========================== */
+// GET SINGLE ORDER
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
@@ -88,14 +79,10 @@ router.get("/:id", async (req, res) => {
 
   try {
     const order = await Order.findById(id);
-
-    if (!order) {
-      return res.status(404).json({ message: "Order not found" });
-    }
-
+    if (!order) return res.status(404).json({ message: "Order not found" });
     res.json(order);
   } catch (err) {
-    res.status(500).json({ message: "Failed to fetch order" });
+    res.status(500).json({ message: "Failed to fetch order", error: err.message });
   }
 });
 
