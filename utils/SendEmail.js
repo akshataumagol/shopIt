@@ -5,14 +5,14 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: "9e2947001@smtp-brevo.com", // your Brevo login
+    user: "9e2947001@smtp-brevo.com",
     pass: process.env.BREVO_SMTP_KEY,
   },
 });
 
 const sendEmail = async ({ to, subject, html }) => {
   await transporter.sendMail({
-    from: '"ShopIt" <akshumagol2000@gmail.com>', 
+    from: '"ShopIt" <akshumagol2000@gmail.com>',
     to,
     subject,
     html,
