@@ -1,33 +1,26 @@
 const nodemailer = require("nodemailer");
 
-console.log("EMAIL ENV CHECK:", {
-  user: process.env.GMAIL_USER,
-  passExists: !!process.env.GMAIL_APP_PASSWORD,
-});
-
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp-relay.brevo.com",
+  port: 587,
+  secure: false,
   auth: {
-    user: process.env.GMAIL_USER,
-    pass: process.env.GMAIL_APP_PASSWORD,
+    user: process.env.BREVO_SMTP_USER,
+    pass: process.env.BREVO_SMTP_KEY,
   },
 });
 
 const sendEmail = async ({ to, subject, html }) => {
-  try {
-    const info = await transporter.sendMail({
-      from: `"ShopIt" <${process.env.GMAIL_USER}>`,
-      to,
-      subject,
-      html,
-    });
-
-    console.log("✅ Email sent:", info.messageId);
-    return info;
-  } catch (error) {
-    console.error("❌ Email error:", error);
-    throw error;
+  if (!process.env.BREVO_SMTP_USER || !process.env.BREVO_SMTP_KEY) {
+    throw new Error("Brevo SMTP env variables missing");
   }
+
+  return transporter.sendMail({
+    from: process.env.EMAIL_FROM,
+    to,
+    subject,
+    html,
+  });
 };
 
 module.exports = sendEmail;
