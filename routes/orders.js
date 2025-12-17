@@ -1,7 +1,7 @@
 const express = require("express");
 const Order = require("../models/Order");
-const sendEmail = require("../utils/SendEmail");
-const orderEmailTemplate = require("../utils/OrderEmailTemplate");
+const sendEmail = require("../utils/sendEmail");
+const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
