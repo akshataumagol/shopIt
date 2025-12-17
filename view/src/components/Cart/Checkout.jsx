@@ -245,7 +245,7 @@ import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
-import api from "../../api/axios";
+import axios from "axios";
 
 function Checkout() {
   const navigate = useNavigate();
