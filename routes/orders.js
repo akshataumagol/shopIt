@@ -5,19 +5,16 @@ const orderEmailTemplate = require("../utils/OrderEmailTemplate");
 
 const router = express.Router();
 
-// CREATE ORDER + SEND EMAIL
 router.post("/", async (req, res) => {
-  console.log("Received new order request:", req.body); // DEBUG
+  console.log("Received new order request:", req.body);
 
   try {
     const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
 
-    if (!email || !cart || !cart.length) {
-      console.warn("Invalid order data"); 
+    if (!email || !Array.isArray(cart) || cart.length === 0) {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
-    console.log("Creating order in MongoDB..."); 
     const order = await Order.create({
       userId: userId || null,
       contactEmail: email,
@@ -35,57 +32,41 @@ router.post("/", async (req, res) => {
       },
     });
 
-    console.log("Order created successfully with ID:", order._id); // DEBUG
-
-    
     try {
-      console.log(`Sending email to customer: ${email}`); 
       await sendEmail({
         to: email,
         subject: "Your Order Confirmation",
         html: orderEmailTemplate(order),
       });
-      console.log("Customer email sent successfully"); 
 
-      console.log("Sending email to admin: akshumagol2000@gmail.com"); 
       await sendEmail({
         to: "akshumagol2000@gmail.com",
         subject: "New Order Received",
         html: orderEmailTemplate(order),
       });
-      console.log("Admin email sent successfully"); 
-
-    } catch (emailError) {
-      console.error("Email sending failed:", emailError); 
+    } catch (err) {
+      console.error("EMAIL ERROR:", err);
     }
 
     res.status(201).json(order);
-
   } catch (error) {
-    console.error("Order creation failed:", error); 
+    console.error("ORDER ERROR:", error);
     res.status(500).json({ message: "Failed to create order" });
   }
 });
 
-// GET SINGLE ORDER
 router.get("/:id", async (req, res) => {
-  console.log("Fetching order with ID:", req.params.id); 
-
   try {
     const order = await Order.findById(req.params.id);
-    if (!order) {
-      console.warn("Order not found"); 
-      return res.status(404).json({ message: "Order not found" });
-    }
-    console.log("Order fetched successfully"); 
+    if (!order) return res.status(404).json({ message: "Order not found" });
     res.json(order);
   } catch (error) {
-    console.error("Failed to fetch order:", error); 
     res.status(500).json({ message: "Failed to fetch order" });
   }
 });
 
 module.exports = router;
+
 
 /*const express = require("express");
 const Order = require("../models/Order");
