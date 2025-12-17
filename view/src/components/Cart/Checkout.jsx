@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+/*import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
@@ -238,15 +238,14 @@ function Checkout() {
   );
 }
 
-export default Checkout;
+export default Checkout;*/
 
 
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
-
-const BASE_URL = "https://shopit-56mz.onrender.com";
+import api from "../../api/axios";
 
 function Checkout() {
   const navigate = useNavigate();
@@ -256,7 +255,10 @@ function Checkout() {
   const [loading, setLoading] = useState(false);
   const [email, setEmail] = useState("");
 
-  const subtotal = cart.reduce((sum, p) => sum + p.price * p.quantity, 0);
+  const subtotal = cart.reduce(
+    (sum, p) => sum + p.price * p.quantity,
+    0
+  );
 
   const [shippingAddress, setShippingAddress] = useState({
     firstName: "",
@@ -286,42 +288,27 @@ function Checkout() {
 
   const handlePaymentSuccess = async (paymentDetails) => {
     setLoading(true);
+
     try {
-      console.log("Sending order to backend...");
-      
-      const res = await fetch(`${BASE_URL}/api/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: null,
-          email,
-          shippingAddress,
-          cart,
-          subtotal,
-          paymentDetails,
-        }),
+      const res = await api.post("/api/orders", {
+        userId: null,
+        email,
+        shippingAddress,
+        cart,
+        subtotal,
+        paymentDetails,
       });
 
-      console.log("Response status:", res.status);
-      
-      const data = await res.json();
-      console.log("Response data:", data);
-
-      if (!res.ok) {
-        // Show the actual error message from backend
-        alert(`Failed to save order: ${data.error || data.message || 'Unknown error'}`);
-        setLoading(false);
-        return;
-      }
-
-      // Success - order was created
-      console.log("Order created successfully:", data._id);
       clearCart();
-      navigate(`/order-confirmation/${data._id}`);
-      
-    } catch (err) {
-      console.error("Order error:", err);
-      alert(`Something went wrong: ${err.message}`);
+      navigate(`/order-confirmation/${res.data._id}`);
+    } catch (error) {
+      console.error("Order error:", error);
+      alert(
+        error.response?.data?.message ||
+        error.response?.data?.error ||
+        "Failed to save order"
+      );
+    } finally {
       setLoading(false);
     }
   };
@@ -329,7 +316,7 @@ function Checkout() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6">
       
-   
+      {/* LEFT: CHECKOUT FORM */}
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-2xl uppercase mb-6">Checkout</h2>
 
@@ -337,7 +324,7 @@ function Checkout() {
           <h3 className="text-lg mb-4">Contact Details</h3>
 
           <div className="mb-4">
-            <label className="block mb-2 font-medium">Email</label>
+            <label>Email</label>
             <input
               type="email"
               value={email}
@@ -355,7 +342,10 @@ function Checkout() {
               placeholder="First Name"
               value={shippingAddress.firstName}
               onChange={(e) =>
-                setShippingAddress({ ...shippingAddress, firstName: e.target.value })
+                setShippingAddress({
+                  ...shippingAddress,
+                  firstName: e.target.value,
+                })
               }
               className="w-full p-2 border rounded"
               required
@@ -365,7 +355,10 @@ function Checkout() {
               placeholder="Last Name"
               value={shippingAddress.lastName}
               onChange={(e) =>
-                setShippingAddress({ ...shippingAddress, lastName: e.target.value })
+                setShippingAddress({
+                  ...shippingAddress,
+                  lastName: e.target.value,
+                })
               }
               className="w-full p-2 border rounded"
               required
@@ -377,7 +370,10 @@ function Checkout() {
             placeholder="Address"
             value={shippingAddress.address}
             onChange={(e) =>
-              setShippingAddress({ ...shippingAddress, address: e.target.value })
+              setShippingAddress({
+                ...shippingAddress,
+                address: e.target.value,
+              })
             }
             className="w-full p-2 border rounded mb-4"
             required
@@ -389,7 +385,10 @@ function Checkout() {
               placeholder="City"
               value={shippingAddress.city}
               onChange={(e) =>
-                setShippingAddress({ ...shippingAddress, city: e.target.value })
+                setShippingAddress({
+                  ...shippingAddress,
+                  city: e.target.value,
+                })
               }
               className="w-full p-2 border rounded"
               required
@@ -399,7 +398,10 @@ function Checkout() {
               placeholder="Postal Code"
               value={shippingAddress.postalCode}
               onChange={(e) =>
-                setShippingAddress({ ...shippingAddress, postalCode: e.target.value })
+                setShippingAddress({
+                  ...shippingAddress,
+                  postalCode: e.target.value,
+                })
               }
               className="w-full p-2 border rounded"
               required
@@ -411,7 +413,10 @@ function Checkout() {
             placeholder="Country"
             value={shippingAddress.country}
             onChange={(e) =>
-              setShippingAddress({ ...shippingAddress, country: e.target.value })
+              setShippingAddress({
+                ...shippingAddress,
+                country: e.target.value,
+              })
             }
             className="w-full p-2 border rounded mb-4"
             required
@@ -422,7 +427,10 @@ function Checkout() {
             placeholder="Phone"
             value={shippingAddress.phone}
             onChange={(e) =>
-              setShippingAddress({ ...shippingAddress, phone: e.target.value })
+              setShippingAddress({
+                ...shippingAddress,
+                phone: e.target.value,
+              })
             }
             className="w-full p-2 border rounded mb-4"
             required
@@ -432,7 +440,7 @@ function Checkout() {
             {!checkoutId ? (
               <button
                 type="submit"
-                className="w-full bg-black text-white py-3 rounded hover:bg-gray-800"
+                className="w-full bg-black text-white py-3 rounded"
               >
                 Continue to Payment
               </button>
@@ -445,7 +453,9 @@ function Checkout() {
                   onError={() => alert("Payment failed")}
                 />
                 {loading && (
-                  <p className="text-gray-500 mt-2">Processing your order...</p>
+                  <p className="text-gray-500 mt-2">
+                    Processing your order...
+                  </p>
                 )}
               </div>
             )}
@@ -453,43 +463,40 @@ function Checkout() {
         </form>
       </div>
 
-    
+      {/* RIGHT: ORDER SUMMARY */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg mb-4">Order Summary</h3>
 
-        {cart.length === 0 ? (
-          <p className="text-gray-500">Your cart is empty</p>
-        ) : (
-          <>
-            {cart.map((product, index) => (
-              <div
-                key={index}
-                className="flex items-start justify-between py-2 border-b"
-              >
-                <img
-                  src={product.image}
-                  alt={product.name}
-                  className="w-20 h-24 object-cover mr-4"
-                />
-                <div className="flex-1">
-                  <h4 className="font-medium">{product.name}</h4>
-                  <p className="text-sm text-gray-500">
-                    Qty: {product.quantity}
-                  </p>
-                </div>
-                <p className="font-medium">${(product.price * product.quantity).toFixed(2)}</p>
-              </div>
-            ))}
-
-            <div className="flex justify-between text-lg mt-4 font-bold">
-              <p>Total</p>
-              <p>${subtotal.toFixed(2)}</p>
+        {cart.map((product, index) => (
+          <div
+            key={index}
+            className="flex items-start justify-between py-2 border-b"
+          >
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-20 h-24 object-cover mr-4"
+            />
+            <div>
+              <h4 className="font-medium">{product.name}</h4>
+              <p className="text-sm text-gray-500">
+                Qty: {product.quantity}
+              </p>
             </div>
-          </>
-        )}
+            <p>
+              ${(product.price * product.quantity).toFixed(2)}
+            </p>
+          </div>
+        ))}
+
+        <div className="flex justify-between text-lg mt-4 font-bold">
+          <p>Total</p>
+          <p>${subtotal.toFixed(2)}</p>
+        </div>
       </div>
     </div>
   );
 }
 
-export default Checkout;*/
+export default Checkout;
+
