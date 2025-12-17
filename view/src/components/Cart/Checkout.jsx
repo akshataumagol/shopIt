@@ -274,7 +274,7 @@ function Checkout() {
     e.preventDefault();
 
     if (!email.includes("@")) {
-      alert("Enter valid email");
+      alert("Please enter a valid email");
       return;
     }
 
@@ -298,13 +298,15 @@ function Checkout() {
         paymentDetails,
       });
 
-      console.log("✅ ORDER RESPONSE:", res.data);
+      console.log("✅ ORDER CREATED:", res.data);
 
       clearCart();
-      navigate(`/order-confirmation/${order._id}`);
+
+      // ✅ FIXED: use res.data._id
+      navigate(`/order-confirmation/${res.data._id}`);
     } catch (err) {
-      console.error("❌ ORDER ERROR:", err);
-      alert("Order failed");
+      console.error("❌ ORDER ERROR:", err.response?.data || err.message);
+      alert("Order failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -312,14 +314,17 @@ function Checkout() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto p-6">
+      {/* LEFT */}
       <form onSubmit={handleCreateCheckout} className="bg-white p-6 rounded">
         <h2 className="text-xl mb-4">Checkout</h2>
 
         <input
+          type="email"
           placeholder="Email"
           className="w-full p-2 border mb-3"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
+          required
         />
 
         <input
@@ -327,12 +332,16 @@ function Checkout() {
           className="w-full p-2 border mb-3"
           value={shippingAddress.address}
           onChange={(e) =>
-            setShippingAddress({ ...shippingAddress, address: e.target.value })
+            setShippingAddress({
+              ...shippingAddress,
+              address: e.target.value,
+            })
           }
+          required
         />
 
         {!checkoutId ? (
-          <button className="w-full bg-black text-white py-2">
+          <button className="w-full bg-black text-white py-2 rounded">
             Continue to Payment
           </button>
         ) : (
@@ -343,17 +352,22 @@ function Checkout() {
           />
         )}
 
-        {loading && <p>Processing order...</p>}
+        {loading && <p className="mt-2 text-gray-500">Processing order...</p>}
       </form>
 
+      {/* RIGHT */}
       <div className="bg-gray-50 p-6 rounded">
         <h3 className="font-bold mb-4">Order Summary</h3>
+
         {cart.map((item, i) => (
-          <div key={i} className="flex justify-between">
-            <span>{item.name} x {item.quantity}</span>
+          <div key={i} className="flex justify-between py-1">
+            <span>
+              {item.name} × {item.quantity}
+            </span>
             <span>${(item.price * item.quantity).toFixed(2)}</span>
           </div>
         ))}
+
         <hr className="my-3" />
         <strong>Total: ${subtotal.toFixed(2)}</strong>
       </div>
@@ -362,4 +376,3 @@ function Checkout() {
 }
 
 export default Checkout;
-
