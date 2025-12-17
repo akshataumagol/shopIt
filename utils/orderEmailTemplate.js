@@ -1,16 +1,16 @@
+// utils/orderEmailTemplate.js
 const orderEmailTemplate = (order) => {
   const itemsHtml = order.items
     .map((item) => {
-      const name = item.name || item.title || "Product";
-      const quantity = item.quantity || item.qty || 1;
+      const name = item.name || "Product";
+      const quantity = item.quantity || 1;
       const price = item.price || 0;
-
       return `
         <tr>
           <td style="border:1px solid #ddd;padding:8px;">${name}</td>
           <td style="border:1px solid #ddd;padding:8px;">${quantity}</td>
           <td style="border:1px solid #ddd;padding:8px;">$${price}</td>
-          <td style="border:1px solid #ddd;padding:8px;">$${price * quantity}</td>
+          <td style="border:1px solid #ddd;padding:8px;">$${(price * quantity).toFixed(2)}</td>
         </tr>
       `;
     })
@@ -21,7 +21,6 @@ const orderEmailTemplate = (order) => {
       <h2>Order Confirmation</h2>
       <p><strong>Order ID:</strong> ${order._id}</p>
       <p><strong>Email:</strong> ${order.contactEmail}</p>
-
       <table width="100%" style="border-collapse:collapse;margin-top:20px;">
         <thead>
           <tr style="background:#f2f2f2;">
@@ -35,7 +34,6 @@ const orderEmailTemplate = (order) => {
           ${itemsHtml}
         </tbody>
       </table>
-
       <h3 style="text-align:right;margin-top:20px;">
         Grand Total: $${order.total}
       </h3>
