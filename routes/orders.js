@@ -1,22 +1,44 @@
 const express = require("express");
+const mongoose = require("mongoose");
 const Order = require("../models/Order");
 const sendEmail = require("../utils/sendEmail");
 const orderEmailTemplate = require("../utils/orderEmailTemplate");
 
 const router = express.Router();
 
-// CREATE ORDER
+/* ===========================
+   TEST EMAIL (KEEP FIRST)
+=========================== */
+router.get("/test-email", async (req, res) => {
+  try {
+    await sendEmail({
+      to: "akshumagol2000@gmail.com",
+      subject: "ShopIt Test Email",
+      html: "<h2>Email system working ✅</h2>",
+    });
+
+    res.json({ success: true });
+  } catch (err) {
+    res.status(500).json({
+      success: false,
+      error: err.message,
+    });
+  }
+});
+
+/* ===========================
+   CREATE ORDER
+=========================== */
 router.post("/", async (req, res) => {
   try {
-    const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
+    const { email, shippingAddress, cart, subtotal, paymentDetails } = req.body;
 
-    if (!email || !cart || !cart.length) {
+    if (!email || !cart || cart.length === 0) {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
-    // 1️⃣ Create order (FAST)
+    // ✅ CREATE ORDER
     const order = await Order.create({
-      userId: userId || null,
       contactEmail: email,
       shippingAddress,
       items: cart,
@@ -32,29 +54,50 @@ router.post("/", async (req, res) => {
       },
     });
 
-    // 2️⃣ Respond immediately
-    res.status(201).json(order);
+    console.log("✅ ORDER SAVED:", order._id);
 
-    // 3️⃣ Send emails in background (NON-BLOCKING)
-    sendEmail({
+    // ✅ SEND CUSTOMER EMAIL
+    await sendEmail({
       to: email,
-      subject: "Your Order Confirmation",
+      subject: "Your ShopIt Order Confirmation",
       html: orderEmailTemplate(order),
-    }).catch(err =>
-      console.error("❌ Customer email failed:", err.message)
-    );
+    });
 
-    sendEmail({
+    // ✅ SEND ADMIN EMAIL
+    await sendEmail({
       to: "akshumagol2000@gmail.com",
       subject: `New Order #${order._id}`,
       html: orderEmailTemplate(order),
-    }).catch(err =>
-      console.error("❌ Admin email failed:", err.message)
-    );
+    });
 
-  } catch (error) {
-    console.error("❌ Order creation failed:", error);
-    res.status(500).json({ message: "Failed to create order" });
+    res.status(201).json(order);
+  } catch (err) {
+    console.error("❌ ORDER ERROR:", err);
+    res.status(500).json({ message: "Order creation failed" });
+  }
+});
+
+/* ===========================
+   GET SINGLE ORDER (LAST)
+=========================== */
+router.get("/:id", async (req, res) => {
+  const { id } = req.params;
+
+  // ✅ Prevent invalid Mongo IDs
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ message: "Invalid order ID" });
+  }
+
+  try {
+    const order = await Order.findById(id);
+
+    if (!order) {
+      return res.status(404).json({ message: "Order not found" });
+    }
+
+    res.json(order);
+  } catch (err) {
+    res.status(500).json({ message: "Failed to fetch order" });
   }
 });
 
