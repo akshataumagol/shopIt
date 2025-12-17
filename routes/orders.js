@@ -7,7 +7,7 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 const router = express.Router();
 
 /* ===========================
-   TEST EMAIL (KEEP FIRST)
+   TEST EMAIL
 =========================== */
 router.get("/test-email", async (req, res) => {
   try {
@@ -19,10 +19,7 @@ router.get("/test-email", async (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    res.status(500).json({
-      success: false,
-      error: err.message,
-    });
+    res.status(500).json({ success: false, error: err.message });
   }
 });
 
@@ -37,7 +34,6 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ message: "Invalid order data" });
     }
 
-    // ✅ CREATE ORDER
     const order = await Order.create({
       contactEmail: email,
       shippingAddress,
@@ -56,19 +52,22 @@ router.post("/", async (req, res) => {
 
     console.log("✅ ORDER SAVED:", order._id);
 
-    // ✅ SEND CUSTOMER EMAIL
-    await sendEmail({
+    // ✅ NON-BLOCKING EMAILS (IMPORTANT)
+    sendEmail({
       to: email,
       subject: "Your ShopIt Order Confirmation",
       html: orderEmailTemplate(order),
-    });
+    }).catch((err) =>
+      console.error("❌ Customer email failed:", err.message)
+    );
 
-    // ✅ SEND ADMIN EMAIL
-    await sendEmail({
+    sendEmail({
       to: "akshumagol2000@gmail.com",
       subject: `New Order #${order._id}`,
       html: orderEmailTemplate(order),
-    });
+    }).catch((err) =>
+      console.error("❌ Admin email failed:", err.message)
+    );
 
     res.status(201).json(order);
   } catch (err) {
@@ -78,12 +77,11 @@ router.post("/", async (req, res) => {
 });
 
 /* ===========================
-   GET SINGLE ORDER (LAST)
+   GET SINGLE ORDER
 =========================== */
 router.get("/:id", async (req, res) => {
   const { id } = req.params;
 
-  // ✅ Prevent invalid Mongo IDs
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ message: "Invalid order ID" });
   }
