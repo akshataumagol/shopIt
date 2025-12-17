@@ -1,33 +1,45 @@
 const orderEmailTemplate = (order) => {
   const itemsHtml = order.items
-    .map(
-      (item) => `
-      <tr>
-        <td>${item.name}</td>
-        <td>${item.quantity}</td>
-        <td>$${item.price}</td>
-        <td>$${item.price * item.quantity}</td>
-      </tr>
-    `
-    )
+    .map((item) => {
+      const name = item.name || item.title || "Product";
+      const quantity = item.quantity || item.qty || 1;
+      const price = item.price || 0;
+
+      return `
+        <tr>
+          <td style="border:1px solid #ddd;padding:8px;">${name}</td>
+          <td style="border:1px solid #ddd;padding:8px;">${quantity}</td>
+          <td style="border:1px solid #ddd;padding:8px;">$${price}</td>
+          <td style="border:1px solid #ddd;padding:8px;">$${price * quantity}</td>
+        </tr>
+      `;
+    })
     .join("");
 
   return `
-    <h2>Order Confirmation</h2>
-    <p>Order ID: ${order._id}</p>
-    <p>Email: ${order.contactEmail}</p>
+    <div style="font-family:Arial;max-width:600px;margin:auto;">
+      <h2>Order Confirmation</h2>
+      <p><strong>Order ID:</strong> ${order._id}</p>
+      <p><strong>Email:</strong> ${order.contactEmail}</p>
 
-    <table border="1" cellpadding="8" cellspacing="0">
-      <tr>
-        <th>Product</th>
-        <th>Qty</th>
-        <th>Price</th>
-        <th>Total</th>
-      </tr>
-      ${itemsHtml}
-    </table>
+      <table width="100%" style="border-collapse:collapse;margin-top:20px;">
+        <thead>
+          <tr style="background:#f2f2f2;">
+            <th style="border:1px solid #ddd;padding:8px;">Product</th>
+            <th style="border:1px solid #ddd;padding:8px;">Qty</th>
+            <th style="border:1px solid #ddd;padding:8px;">Price</th>
+            <th style="border:1px solid #ddd;padding:8px;">Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+      </table>
 
-    <h3>Total: $${order.total}</h3>
+      <h3 style="text-align:right;margin-top:20px;">
+        Grand Total: $${order.total}
+      </h3>
+    </div>
   `;
 };
 
