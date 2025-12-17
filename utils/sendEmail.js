@@ -5,18 +5,14 @@ const transporter = nodemailer.createTransport({
   port: 587,
   secure: false,
   auth: {
-    user: process.env.BREVO_SMTP_USER,
+    user: "9e2947001@smtp-brevo.com", 
     pass: process.env.BREVO_SMTP_KEY,
   },
 });
 
 const sendEmail = async ({ to, subject, html }) => {
-  if (!process.env.BREVO_SMTP_USER || !process.env.BREVO_SMTP_KEY) {
-    throw new Error("Brevo SMTP env variables missing");
-  }
-
-  return transporter.sendMail({
-    from: process.env.EMAIL_FROM,
+  await transporter.sendMail({
+    from: '"shopit" <akshumagol2000@gmail.com>', 
     to,
     subject,
     html,
