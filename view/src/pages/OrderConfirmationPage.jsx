@@ -221,9 +221,7 @@ const OrderConfirmationPage = () => {
           >
             Continue Shopping
           </Link>
-          <button className="px-8 py-3 border-2 border-gray-300 text-gray-700 rounded-lg font-semibold hover:border-gray-400 transition-colors">
-            Track Order
-          </button>
+          
         </div>
       </div>
     </div>
