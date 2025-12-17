@@ -6,85 +6,34 @@ const orderEmailTemplate = require("../utils/orderEmailTemplate");
 const router = express.Router();
 
 router.post("/", async (req, res) => {
-  try {
-    const { email, shippingAddress, cart, subtotal, paymentDetails, userId } =
-      req.body;
-
-    if (!email || !cart || !cart.length) {
-      return res.status(400).json({ message: "Invalid order data" });
-    }
-
-    const order = await Order.create({
-      userId: userId || null,
-      contactEmail: email,
-      shippingAddress,
-      items: cart,
-      subtotal,
-      shippingCost: 0,
-      total: subtotal,
-      payment: {
-        method: "PayPal",
-        status: "Paid",
-        paypalOrderId: paymentDetails?.id || "",
-        payerId: paymentDetails?.payer?.payer_id || "",
-        paidAt: new Date(),
-      },
-    });
-
-    await sendEmail({
-      to: email,
-      subject: "Your Order Confirmation",
-      html: orderEmailTemplate(order),
-    });
-
-    await sendEmail({
-      to: "akshumagol2000@gmail.com",
-      subject: "New Order Received",
-      html: orderEmailTemplate(order),
-    });
-
-    res.status(201).json(order);
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ message: "Failed to create order" });
-  }
-});
-
-router.get("/:id", async (req, res) => {
-  try {
-    const order = await Order.findById(req.params.id);
-    if (!order) return res.status(404).json({ message: "Order not found" });
-    res.json(order);
-  } catch (error) {
-    res.status(500).json({ message: "Failed to fetch order" });
-  }
-});
-
-module.exports = router;
-
-
-
-/*const express = require("express");
-const Order = require("../models/Order");
-const sendEmail = require("../utils/SendEmail");
-const orderEmailTemplate = require("../utils/OrderEmailTemplate");
-const router = express.Router();
-
-router.post("/", async (req, res) => {
-  console.log("=== NEW ORDER REQUEST ===");
-  console.log("Request body:", JSON.stringify(req.body, null, 2));
+  console.log("========================================");
+  console.log("NEW ORDER REQUEST");
+  console.log("Time:", new Date().toISOString());
+  console.log("========================================");
   
   try {
     const { email, shippingAddress, cart, subtotal, paymentDetails, userId } = req.body;
-    
+
+    console.log("Received data:");
+    console.log("- Email:", email);
+    console.log("- Cart items:", cart?.length);
+    console.log("- Subtotal:", subtotal);
+    console.log("- Shipping address:", shippingAddress);
+
     // Validation
-    if (!email || !Array.isArray(cart) || cart.length === 0) {
-      console.error("Validation failed:", { email, cartLength: cart?.length });
-      return res.status(400).json({ message: "Invalid order data" });
+    if (!email || !cart || !cart.length) {
+      console.error("❌ VALIDATION FAILED");
+      return res.status(400).json({ 
+        message: "Invalid order data",
+        error: "Email and cart are required" 
+      });
     }
-    
-    console.log("Creating order in database...");
-    const order = await Order.create({
+
+    console.log("✓ Validation passed");
+    console.log("Attempting to save to database...");
+
+    // Create order
+    const orderData = {
       userId: userId || null,
       contactEmail: email,
       shippingAddress,
@@ -99,55 +48,69 @@ router.post("/", async (req, res) => {
         payerId: paymentDetails?.payer?.payer_id || "",
         paidAt: new Date(),
       },
-    });
-    
-    console.log("Order created successfully:", order._id);
-    
-    // Send emails with detailed logging
-    console.log("=== SENDING EMAILS ===");
-    console.log("Customer email:", email);
-    console.log("BREVO_SMTP_KEY exists:", !!process.env.BREVO_SMTP_KEY);
+    };
+
+    console.log("Order data prepared:", JSON.stringify(orderData, null, 2));
+
+    const order = await Order.create(orderData);
+
+    console.log("✓✓✓ ORDER SAVED TO DATABASE ✓✓✓");
+    console.log("Order ID:", order._id);
+    console.log("Order email:", order.contactEmail);
+
+    // Try to send emails (but don't fail the order if emails fail)
+    console.log("Attempting to send emails...");
     
     try {
-      console.log("Sending customer email...");
       await sendEmail({
         to: email,
         subject: "Your Order Confirmation",
         html: orderEmailTemplate(order),
       });
-      console.log("✓ Customer email sent successfully");
+      console.log("✓ Customer email sent");
     } catch (emailError) {
-      console.error("✗ Customer email FAILED:");
-      console.error("Error name:", emailError.name);
-      console.error("Error message:", emailError.message);
-      console.error("Error stack:", emailError.stack);
-      console.error("Full error object:", JSON.stringify(emailError, null, 2));
+      console.error("❌ Customer email failed (continuing anyway):");
+      console.error("Email error:", emailError.message);
     }
-    
+
     try {
-      console.log("Sending admin notification email...");
       await sendEmail({
         to: "akshumagol2000@gmail.com",
         subject: "New Order Received",
         html: orderEmailTemplate(order),
       });
-      console.log("✓ Admin email sent successfully");
+      console.log("✓ Admin email sent");
     } catch (emailError) {
-      console.error("✗ Admin email FAILED:");
-      console.error("Error name:", emailError.name);
-      console.error("Error message:", emailError.message);
-      console.error("Full error object:", JSON.stringify(emailError, null, 2));
+      console.error("❌ Admin email failed (continuing anyway):");
+      console.error("Email error:", emailError.message);
     }
-    
-    console.log("=== ORDER COMPLETE ===");
+
+    console.log("========================================");
+    console.log("✓✓✓ ORDER COMPLETED SUCCESSFULLY ✓✓✓");
+    console.log("========================================");
+
+    // Return the order
     res.status(201).json(order);
     
   } catch (error) {
-    console.error("=== ORDER CREATION ERROR ===");
-    console.error("Error name:", error.name);
-    console.error("Error message:", error.message);
-    console.error("Error stack:", error.stack);
-    res.status(500).json({ message: "Failed to create order", error: error.message });
+    console.error("========================================");
+    console.error("❌❌❌ CRITICAL ERROR ❌❌❌");
+    console.error("========================================");
+    console.error("Error Type:", error.name);
+    console.error("Error Message:", error.message);
+    console.error("Error Stack:", error.stack);
+    
+    if (error.name === 'ValidationError') {
+      console.error("Mongoose Validation Error Details:", error.errors);
+    }
+    
+    // Send detailed error to frontend
+    res.status(500).json({ 
+      message: "Failed to create order",
+      error: error.message,
+      errorType: error.name,
+      details: process.env.NODE_ENV === 'production' ? undefined : error.stack
+    });
   }
 });
 
@@ -163,5 +126,3 @@ router.get("/:id", async (req, res) => {
 });
 
 module.exports = router;
-
-*/
