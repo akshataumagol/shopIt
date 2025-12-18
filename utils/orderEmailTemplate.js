@@ -18,7 +18,7 @@ const orderEmailTemplate = (order) => {
 
   return `
     <div style="font-family:Arial;max-width:600px;margin:auto;">
-      <h2>Order Confirmation</h2>
+      <h2>Your Order Confirm</h2>
       <p><strong>Order ID:</strong> ${order._id}</p>
       <p><strong>Email:</strong> ${order.contactEmail}</p>
       <table width="100%" style="border-collapse:collapse;margin-top:20px;">
