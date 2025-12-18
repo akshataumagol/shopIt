@@ -9,8 +9,8 @@ const orderEmailTemplate = (order) => {
         <tr>
           <td style="border:1px solid #ddd;padding:8px;">${name}</td>
           <td style="border:1px solid #ddd;padding:8px;">${quantity}</td>
-          <td style="border:1px solid #ddd;padding:8px;">$${price}</td>
-          <td style="border:1px solid #ddd;padding:8px;">$${(price * quantity).toFixed(2)}</td>
+          <td style="border:1px solid #ddd;padding:8px;">₹${price}</td>
+          <td style="border:1px solid #ddd;padding:8px;">₹${(price * quantity).toFixed(2)}</td>
         </tr>
       `;
     })
@@ -35,7 +35,7 @@ const orderEmailTemplate = (order) => {
         </tbody>
       </table>
       <h3 style="text-align:right;margin-top:20px;">
-        Grand Total: $${order.total}
+        Grand Total: ₹${order.total}
       </h3>
     </div>
   `;
