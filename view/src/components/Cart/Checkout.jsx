@@ -215,13 +215,13 @@ function Checkout() {
                 Qty: {product.quantity}
               </p>
             </div>
-            <p>${(product.price * product.quantity).toLocaleString()}</p>
+            <p>₹{(product.price * product.quantity).toLocaleString()}</p>
           </div>
         ))}
 
         <div className="flex justify-between text-lg mt-4">
           <p>Total</p>
-          <p>${subtotal.toLocaleString()}</p>
+          <p>₹{subtotal.toLocaleString()}</p>
         </div>
       </div>
     </div>
