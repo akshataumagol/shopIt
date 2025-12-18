@@ -1,8 +1,8 @@
-/*import React, { useState } from "react";
+import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
-
+import axios from "axios";
 
 const BASE_URL = "https://shopit-56mz.onrender.com";
 
@@ -47,32 +47,22 @@ function Checkout() {
   const handlePaymentSuccess = async (paymentDetails) => {
     setLoading(true);
     try {
-       const res = await fetch(`${BASE_URL}/api/orders`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          userId: null, // optional
-          email, // ✅ REAL USER EMAIL
-          shippingAddress,
-          cart,
-          subtotal,
-          paymentDetails,
-        }),
+      const res = await axios.post(`${BASE_URL}/api/orders`, {
+        userId: null, // optional
+        email, // ✅ REAL USER EMAIL
+        shippingAddress,
+        cart,
+        subtotal,
+        paymentDetails,
       });
 
-      const order = await res.json();
-
-      if (!res.ok) {
-        alert("Failed to save order");
-        setLoading(false);
-        return;
-      }
+      console.log("✅ ORDER CREATED:", res.data);
 
       clearCart();
-      navigate(`/order-confirmation/${order._id}`);
+      navigate(`/order-confirmation/${res.data._id}`);
     } catch (err) {
-      console.error("Order error:", err);
-      alert("Something went wrong");
+      console.error("❌ ORDER ERROR:", err.response?.data || err.message);
+      alert("Order failed. Please try again.");
     } finally {
       setLoading(false);
     }
@@ -81,7 +71,7 @@ function Checkout() {
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-7xl mx-auto py-10 px-6">
       
-     
+      {/* LEFT: CHECKOUT FORM */}
       <div className="bg-white rounded-lg p-6">
         <h2 className="text-2xl uppercase mb-6">Checkout</h2>
 
@@ -205,7 +195,7 @@ function Checkout() {
         </form>
       </div>
 
-     
+      {/* RIGHT: ORDER SUMMARY */}
       <div className="bg-gray-50 p-6 rounded-lg">
         <h3 className="text-lg mb-4">Order Summary</h3>
 
@@ -238,8 +228,8 @@ function Checkout() {
   );
 }
 
-export default Checkout;*/
-import React, { useState } from "react";
+export default Checkout;
+/*import React, { useState } from "react";
 import { useCart } from "../../context/CartContext";
 import { useNavigate } from "react-router-dom";
 import PayPalButton from "./PayPalButton";
@@ -314,7 +304,7 @@ function Checkout() {
 
   return (
     <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 max-w-6xl mx-auto p-6">
-      {/* LEFT */}
+   
       <form onSubmit={handleCreateCheckout} className="bg-white p-6 rounded">
         <h2 className="text-xl mb-4">Checkout</h2>
 
@@ -355,7 +345,7 @@ function Checkout() {
         {loading && <p className="mt-2 text-gray-500">Processing order...</p>}
       </form>
 
-      {/* RIGHT */}
+     
       <div className="bg-gray-50 p-6 rounded">
         <h3 className="font-bold mb-4">Order Summary</h3>
 
@@ -375,4 +365,4 @@ function Checkout() {
   );
 }
 
-export default Checkout;
+export default Checkout;*/
