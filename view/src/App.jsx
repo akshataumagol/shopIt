@@ -6,6 +6,7 @@ import Home from "./pages/Home";
 import Login from "./pages/Login";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
+import TrackOrder from "./pages/TrackOrder";
 import Checkout from "./components/Cart/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
@@ -26,8 +27,7 @@ function App() {
             <Route path="register" element={<Register setUser={setUser} />} />
             <Route path="profile" element={<Profile user={user} />} />
             <Route path="checkout" element={<Checkout user={user} />} />
-
-            {/* Correct Order Confirmation Route with :orderId */}
+            <Route path="/track-order/:orderId" element={<TrackOrder />} />
             <Route
               path="order-confirmation/:orderId"
               element={<OrderConfirmation />}
