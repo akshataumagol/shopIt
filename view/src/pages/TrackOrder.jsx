@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
-import { Package, Truck, CheckCircle, Clock, MapPin, Home } from "lucide-react";
 
 const BASE_URL = "https://shopit-56mz.onrender.com";
 
 const steps = [
-  { key: "processing", label: "Order Processing", icon: Clock },
-  { key: "shipped", label: "Shipped", icon: Package },
-  { key: "out_for_delivery", label: "Out for Delivery", icon: Truck },
-  { key: "delivered", label: "Delivered", icon: CheckCircle },
+  { key: "processing", label: "Order Processing", icon: "⏳" },
+  { key: "shipped", label: "Shipped", icon: "📦" },
+  { key: "out_for_delivery", label: "Out for Delivery", icon: "🚚" },
+  { key: "delivered", label: "Delivered", icon: "✅" },
 ];
+
 
 const TrackOrder = () => {
   const { orderId } = useParams();
