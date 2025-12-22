@@ -213,16 +213,23 @@ const OrderConfirmationPage = () => {
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex flex-wrap gap-4 justify-center">
-          <Link
-            to="/"
-            className="px-8 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
-          >
-            Continue Shopping
-          </Link>
-          
-        </div>
+       {/* Action Buttons */}
+<div className="flex flex-wrap gap-4 justify-center">
+  <Link
+    to="/"
+    className="px-8 py-3 bg-black text-white rounded-lg font-semibold hover:bg-gray-800 transition-colors"
+  >
+    Continue Shopping
+  </Link>
+
+  <Link
+    to={`/track-order/${order._id}`}
+    className="px-8 py-3 border border-black text-black rounded-lg font-semibold hover:bg-gray-100 transition-colors"
+  >
+    Track Order
+  </Link>
+</div>
+
       </div>
     </div>
   );
