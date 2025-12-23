@@ -1,66 +1,52 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { authAPI } from '../utils/api';
-import { toast } from 'sonner';
-import MyOrdersPage from './MyOrdersPage';
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { authAPI } from "../utils/api";
+import MyOrdersPage from "./MyOrdersPage";
 
 function Profile() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const data = await authAPI.getMe();
-        setUser(data);
-      } catch (error) {
-        console.error('Failed to fetch user:', error);
-        navigate('/login');
-      } finally {
-        setLoading(false);
-      }
-    };
-
-    const token = localStorage.getItem('token');
+    const token = localStorage.getItem("token");
     if (!token) {
-      navigate('/login');
-    } else {
-      fetchUser();
+      navigate("/login");
+      return;
     }
+
+    authAPI.getMe()
+      .then(data => setUser(data))
+      .catch(() => {
+        localStorage.removeItem("token");
+        navigate("/login");
+      });
   }, [navigate]);
 
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    toast.success('Logged out successfully');
-    navigate('/login');
+  const logout = () => {
+    localStorage.removeItem("token");
+    navigate("/login");
   };
 
-  if (loading) {
-    return <div className="text-center py-10">Loading profile...</div>;
-  }
-
-  if (!user) {
-    return <div className="text-center py-10">User not found</div>;
-  }
+  if (!user) return <p>Loading profile...</p>;
 
   return (
-    <div className="min-h-screen bg-gray-100 flex flex-col md:flex-row">
-      {/* Left Sidebar */}
-      <div className="w-full md:w-1/4 bg-white shadow-md p-6 flex flex-col items-center md:items-start">
-        <h1 className="text-2xl md:text-3xl font-bold mb-2">{user.name || 'User'}</h1>
-        <p className="text-gray-600 mb-6">{user.email}</p>
+    <div className="flex min-h-screen bg-gray-100">
+      {/* Sidebar */}
+      <div className="w-1/4 bg-white p-6">
+        <h2 className="text-xl font-bold">{user.name}</h2>
+        <p className="text-gray-500">{user.email}</p>
+
         <button
-          onClick={handleLogout}
-          className="w-full bg-red-500 text-white py-2 px-4 rounded hover:bg-red-600"
+          onClick={logout}
+          className="mt-6 bg-red-500 text-white px-4 py-2 rounded"
         >
           Logout
         </button>
       </div>
 
-      {/* Right Content */}
-      <div className="w-full md:w-3/4 p-6 overflow-auto">
-        <MyOrdersPage />
+      {/* Orders */}
+      <div className="w-3/4 p-6">
+        <MyOrdersPage email={user.email} />
       </div>
     </div>
   );
