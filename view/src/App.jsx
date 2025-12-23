@@ -66,7 +66,7 @@ import TrackOrder from "./pages/TrackOrder";
 import Checkout from "./components/Cart/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
-import ProtectedRoute from "ProtectedRoute";
+import ProtectedRoute from "./components/Common/ProtectedRoute";
 import ProductDetails from "./components/Products/ProductDetails";
 import { Toaster } from "sonner";
 
