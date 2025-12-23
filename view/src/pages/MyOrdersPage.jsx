@@ -24,37 +24,75 @@ function MyOrdersPage({ email }) {
     fetchOrders();
   }, [email]);
 
-  if (loading) return <p>Loading orders...</p>;
+  if (loading) {
+    return (
+      <div className="flex justify-center py-10 text-gray-500">
+        Loading orders...
+      </div>
+    );
+  }
 
-  // ✅ NO ORDERS CASE
+  /* 🟢 NO ORDERS */
   if (orders.length === 0) {
     return (
-      <div className="text-center py-10">
-        <h2 className="text-xl font-semibold">No orders yet</h2>
-        <p className="text-gray-500 mt-2">
-          You haven’t placed any orders.
+      <div className="flex flex-col items-center justify-center py-20 bg-white rounded-lg shadow-sm">
+        <h2 className="text-2xl font-semibold mb-2">No Orders Yet</h2>
+        <p className="text-gray-500 mb-6">
+          You haven’t placed any orders yet.
         </p>
+        <a
+          href="/"
+          className="px-6 py-2 bg-black text-white rounded hover:bg-gray-800 transition"
+        >
+          Continue Shopping
+        </a>
       </div>
     );
   }
 
   return (
     <div>
-      <h2 className="text-2xl font-bold mb-4">My Orders</h2>
+      <h2 className="text-2xl font-bold mb-6">My Orders</h2>
 
-      {orders.map(order => (
-        <div
-          key={order._id}
-          className="border rounded p-4 mb-4 bg-white"
-        >
-          <p><strong>Order ID:</strong> {order._id}</p>
-          <p><strong>Total:</strong> ₹{order.total}</p>
-          <p><strong>Status:</strong> {order.payment.status}</p>
-          <p className="text-sm text-gray-500">
-            {new Date(order.createdAt).toLocaleString()}
-          </p>
-        </div>
-      ))}
+      <div className="space-y-4">
+        {orders.map((order) => (
+          <div
+            key={order._id}
+            className="border rounded-lg p-5 bg-white shadow-sm hover:shadow-md transition"
+          >
+            <div className="flex justify-between items-center mb-2">
+              <p className="font-semibold">Order #{order._id.slice(-6)}</p>
+              <span
+                className={`px-3 py-1 text-sm rounded-full ${
+                  order.payment.status === "Paid"
+                    ? "bg-green-100 text-green-700"
+                    : "bg-yellow-100 text-yellow-700"
+                }`}
+              >
+                {order.payment.status}
+              </span>
+            </div>
+
+            <p className="text-gray-600 text-sm mb-1">
+              Ordered on{" "}
+              {new Date(order.createdAt).toLocaleDateString()}
+            </p>
+
+            <p className="font-semibold mt-2">
+              Total: ₹{order.total.toFixed(2)}
+            </p>
+
+            <div className="mt-4">
+              <a
+                href={`/track-order/${order._id}`}
+                className="text-sm text-blue-600 hover:underline"
+              >
+                Track Order →
+              </a>
+            </div>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
