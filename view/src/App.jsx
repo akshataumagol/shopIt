@@ -54,7 +54,7 @@ function App() {
 }
 
 export default App;*/
-import React, { useState } from "react";
+import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { CartProvider } from "./context/CartContext";
 import UserLayout from "./components/Layout/UserLayout";
@@ -66,23 +66,21 @@ import TrackOrder from "./pages/TrackOrder";
 import Checkout from "./components/Cart/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
-import ProtectedRoute from "./components/Common/ProtectedRoute";
 import ProductDetails from "./components/Products/ProductDetails";
+import ProtectedRoute from "./components/ProtectedRoute";
 import { Toaster } from "sonner";
 
 function App() {
-  const [user, setUser] = useState(null);
-  
   return (
     <CartProvider>
       <BrowserRouter>
         <Toaster position="top-right" />
         <Routes>
           <Route path="/" element={<UserLayout />}>
-            <Route index element={<Home user={user} />} />
-            <Route path="login" element={<Login setUser={setUser} />} />
-            <Route path="register" element={<Register setUser={setUser} />} />
-            <Route path="profile" element={<Profile user={user} />} />
+            <Route index element={<Home />} />
+            <Route path="login" element={<Login />} />
+            <Route path="register" element={<Register />} />
+            <Route path="profile" element={<Profile />} />
             <Route path="/track-order/:orderId" element={<TrackOrder />} />
             
             {/* Protected Checkout Route */}
@@ -90,7 +88,7 @@ function App() {
               path="checkout"
               element={
                 <ProtectedRoute>
-                  <Checkout user={user} />
+                  <Checkout />
                 </ProtectedRoute>
               }
             />
