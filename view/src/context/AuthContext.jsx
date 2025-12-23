@@ -65,6 +65,7 @@ export function AuthProvider({ children }) {
 
 export const useAuth = () => useContext(AuthContext);*/
 // src/context/AuthContext.jsx
+// src/context/AuthContext.jsx
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 
@@ -72,21 +73,25 @@ const AuthContext = createContext();
 
 export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
+  const [loading, setLoading] = useState(true); // Track auth initialization
 
   useEffect(() => {
     const token = localStorage.getItem("token");
     if (token) {
       axios
-        .get("http://localhost:5000/api/auth/me", {
+        .get(`${import.meta.env.VITE_API_URL || "https://shopit-56mz.onrender.com"}/api/auth/me`, {
           headers: { Authorization: `Bearer ${token}` },
         })
         .then((res) => setUser(res.data))
-        .catch(() => setUser(null));
+        .catch(() => setUser(null))
+        .finally(() => setLoading(false));
+    } else {
+      setLoading(false);
     }
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, setUser }}>
+    <AuthContext.Provider value={{ user, setUser, loading }}>
       {children}
     </AuthContext.Provider>
   );
@@ -94,8 +99,7 @@ export function AuthProvider({ children }) {
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error("useAuth must be used within an AuthProvider");
+  if (!context) throw new Error("useAuth must be used within AuthProvider");
   return context;
 };
-
 
