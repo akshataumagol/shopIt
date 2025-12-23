@@ -1,5 +1,4 @@
-// FILE: src/components/Layout/CartDrawer.jsx
-import React from "react";
+/*import React from "react";
 import { IoMdClose } from "react-icons/io";
 import CartContents from "../Cart/CartContents";
 
@@ -10,20 +9,20 @@ function CartDrawer({ drawerOpen, toggleCartDrawer, user }) {
         transform transition-transform duration-300 flex flex-col z-50 
         ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
     >
-      {/* Close Button */}
+     
       <div className="flex justify-end p-4">
         <button onClick={toggleCartDrawer}>
           <IoMdClose className="h-6 w-6 text-gray-600" />
         </button>
       </div>
 
-      {/* Scrollable Cart Contents */}
+     
       <div className="flex-grow overflow-y-auto p-4">
         <h2 className="text-xl font-semibold mb-4">Your Cart</h2>
         <CartContents user={user} />
       </div>
 
-      {/* Sticky Checkout Button */}
+     
       <div className="p-4 bg-white border-t sticky bottom-0">
         <button
           onClick={() => {
@@ -45,4 +44,56 @@ function CartDrawer({ drawerOpen, toggleCartDrawer, user }) {
   );
 }
 
+export default CartDrawer;*/
+
+import React from "react";
+import { IoMdClose } from "react-icons/io";
+import CartContents from "../Cart/CartContents";
+import { useAuth } from "../../context/AuthContext";
+import { useNavigate } from "react-router-dom";
+
+function CartDrawer({ drawerOpen, toggleCartDrawer }) {
+  const { user } = useAuth();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    toggleCartDrawer();
+
+    if (!user) {
+      navigate("/login", { state: { from: "/checkout" } });
+    } else {
+      navigate("/checkout");
+    }
+  };
+
+  return (
+    <div
+      className={`fixed top-0 right-0 w-3/4 sm:w-1/2 md:w-[33rem] h-full bg-white shadow-lg
+      transform transition-transform duration-300 z-50 ${
+        drawerOpen ? "translate-x-0" : "translate-x-full"
+      }`}
+    >
+      <div className="flex justify-end p-4">
+        <button onClick={toggleCartDrawer}>
+          <IoMdClose className="h-6 w-6" />
+        </button>
+      </div>
+
+      <div className="flex-grow overflow-y-auto p-4">
+        <CartContents />
+      </div>
+
+      <div className="p-4 border-t">
+        <button
+          onClick={handleCheckout}
+          className="w-full bg-black text-white py-3 rounded"
+        >
+          Checkout
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export default CartDrawer;
+
