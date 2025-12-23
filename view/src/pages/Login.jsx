@@ -116,7 +116,7 @@ export default Login;*/
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
-import { useAuth } from "../../context/AuthContext";
+import { useAuth } from "../context/AuthContext";
 import loginImage from "../assets/login.webp";
 
 const BASE_URL = "https://shopit-56mz.onrender.com";
