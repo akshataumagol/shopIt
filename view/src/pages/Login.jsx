@@ -112,11 +112,11 @@ function Login({ setUser }) {
 
 export default Login;*/
 // FILE: src/pages/Login.jsx
-import React, { useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+ import React, { useState } from "react";
+import { Link, useNavigate, useLocation } from "react-router-dom";
 import { toast } from "sonner";
 import axios from "axios";
-import { useCart } from "../context/CartContext"; // ✅ Import useCart
+import { useAuth } from "../context/AuthContext";
 import loginImage from "../assets/login.webp";
 
 const BASE_URL = "https://shopit-56mz.onrender.com";
@@ -125,37 +125,34 @@ function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [loading, setLoading] = useState(false);
-  
+
+  const { setUser } = useAuth();
   const navigate = useNavigate();
-  const { setUser } = useCart(); // ✅ Get setUser from context
+  const location = useLocation();
+
+  // redirect to original page after login
+  const redirectPath = location.state?.from || "/";
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
 
     try {
-      const response = await axios.post(
-        `${BASE_URL}/api/auth/login`,
-        { email, password }
-      );
-
-      console.log("LOGIN RESPONSE:", response.data);
+      const response = await axios.post(`${BASE_URL}/api/auth/login`, {
+        email,
+        password,
+      });
 
       if (!response.data?.token) {
         toast.error("Unexpected response from server");
         return;
       }
 
-      // ✅ Save token to localStorage
       localStorage.setItem("token", response.data.token);
-
-      // ✅ Save user to context (which also saves to localStorage)
       setUser(response.data.user);
 
       toast.success("Login successful!");
-
-      // ✅ Redirect to checkout or home
-      navigate("/checkout");
+      navigate(redirectPath, { replace: true });
     } catch (error) {
       console.error("LOGIN ERROR:", error);
       toast.error(error.response?.data?.message || "Login failed");
@@ -166,7 +163,6 @@ function Login() {
 
   return (
     <div className="flex min-h-screen">
-      {/* Form */}
       <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12">
         <form
           onSubmit={handleSubmit}
@@ -213,7 +209,6 @@ function Login() {
         </form>
       </div>
 
-      {/* Image */}
       <div className="hidden md:block w-1/2 bg-gray-300">
         <img
           src={loginImage}
@@ -226,3 +221,4 @@ function Login() {
 }
 
 export default Login;
+
