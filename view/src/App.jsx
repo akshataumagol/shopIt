@@ -67,7 +67,7 @@ import Checkout from "./components/Cart/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
 import ProductDetails from "./components/Products/ProductDetails";
-import ProtectedRoute from "./components/ProtectedRoute";
+import ProtectedRoute from "./components/Common/ProtectedRoute";
 import { Toaster } from "sonner";
 
 function App() {
