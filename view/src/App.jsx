@@ -10,6 +10,7 @@ import TrackOrder from "./pages/TrackOrder";
 import Checkout from "./components/Cart/Checkout";
 import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
+import ProtectedRoute from "./routes/ProtectedRoute";
 import ProductDetails from "./components/Products/ProductDetails";
 import { Toaster } from "sonner";
 
@@ -28,6 +29,13 @@ function App() {
             <Route path="profile" element={<Profile user={user} />} />
             <Route path="checkout" element={<Checkout user={user} />} />
             <Route path="/track-order/:orderId" element={<TrackOrder />} />
+             path="/checkout"
+  element={
+    <ProtectedRoute>
+      <Checkout />
+    </ProtectedRoute>
+  }
+/>
             <Route
               path="order-confirmation/:orderId"
               element={<OrderConfirmation />}
