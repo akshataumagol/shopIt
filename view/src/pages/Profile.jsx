@@ -14,8 +14,9 @@ function Profile() {
       return;
     }
 
-    authAPI.getMe()
-      .then(data => setUser(data))
+    authAPI
+      .getMe()
+      .then((data) => setUser(data))
       .catch(() => {
         localStorage.removeItem("token");
         navigate("/login");
@@ -27,26 +28,35 @@ function Profile() {
     navigate("/login");
   };
 
-  if (!user) return <p>Loading profile...</p>;
+  if (!user) {
+    return (
+      <div className="flex justify-center py-20 text-gray-500">
+        Loading profile...
+      </div>
+    );
+  }
 
   return (
-    <div className="flex min-h-screen bg-gray-100">
-      {/* Sidebar */}
-      <div className="w-1/4 bg-white p-6">
-        <h2 className="text-xl font-bold">{user.name}</h2>
-        <p className="text-gray-500">{user.email}</p>
+    <div className="min-h-screen bg-gray-100 p-6">
+      <div className="max-w-6xl mx-auto bg-white rounded-lg shadow flex flex-col md:flex-row">
+        
+        {/* SIDEBAR */}
+        <div className="md:w-1/4 border-r p-6">
+          <h2 className="text-2xl font-bold mb-1">{user.name}</h2>
+          <p className="text-gray-500 text-sm mb-6">{user.email}</p>
 
-        <button
-          onClick={logout}
-          className="mt-6 bg-red-500 text-white px-4 py-2 rounded"
-        >
-          Logout
-        </button>
-      </div>
+          <button
+            onClick={logout}
+            className="w-full bg-red-500 text-white py-2 rounded hover:bg-red-600 transition"
+          >
+            Logout
+          </button>
+        </div>
 
-      {/* Orders */}
-      <div className="w-3/4 p-6">
-        <MyOrdersPage email={user.email} />
+        {/* CONTENT */}
+        <div className="md:w-3/4 p-6">
+          <MyOrdersPage email={user.email} />
+        </div>
       </div>
     </div>
   );
