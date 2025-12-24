@@ -130,7 +130,7 @@ function Login() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // redirect to original page after login
+  // ✅ FIX: get redirect from state
   const redirectPath = location.state?.from || "/";
 
   const handleSubmit = async (e) => {
@@ -143,18 +143,12 @@ function Login() {
         password,
       });
 
-      if (!response.data?.token) {
-        toast.error("Unexpected response from server");
-        return;
-      }
-
       localStorage.setItem("token", response.data.token);
       setUser(response.data.user);
 
       toast.success("Login successful!");
       navigate(redirectPath, { replace: true });
     } catch (error) {
-      console.error("LOGIN ERROR:", error);
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
       setLoading(false);
@@ -163,10 +157,10 @@ function Login() {
 
   return (
     <div className="flex min-h-screen">
-      <div className="w-full md:w-1/2 flex flex-col justify-center items-center p-8 md:p-12">
+      <div className="w-full md:w-1/2 flex items-center justify-center p-8">
         <form
           onSubmit={handleSubmit}
-          className="w-full max-w-md bg-white p-8 rounded-lg shadow-sm border"
+          className="w-full max-w-md bg-white p-8 rounded-lg shadow border"
         >
           <h2 className="text-2xl font-bold text-center mb-6">Login</h2>
 
@@ -176,7 +170,7 @@ function Login() {
               type="email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
@@ -187,7 +181,7 @@ function Login() {
               type="password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full p-2 border rounded focus:outline-none focus:ring-2 focus:ring-black"
+              className="w-full p-2 border rounded"
               required
             />
           </div>
@@ -195,7 +189,7 @@ function Login() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-black text-white py-2 rounded hover:bg-gray-800 transition"
+            className="w-full bg-black text-white py-2 rounded"
           >
             {loading ? "Signing In..." : "Sign In"}
           </button>
@@ -209,11 +203,11 @@ function Login() {
         </form>
       </div>
 
-      <div className="hidden md:block w-1/2 bg-gray-300">
+      <div className="hidden md:block w-1/2">
         <img
           src={loginImage}
           alt="Login"
-          className="h-[700px] w-full object-cover"
+          className="h-full w-full object-cover"
         />
       </div>
     </div>
@@ -221,4 +215,5 @@ function Login() {
 }
 
 export default Login;
+
 
