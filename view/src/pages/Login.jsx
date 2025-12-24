@@ -207,7 +207,7 @@ function Login() {
         <img
           src={loginImage}
           alt="Login"
-          className="h-full w-full object-cover"
+          className="h-[700px] w-full object-cover"
         />
       </div>
     </div>
