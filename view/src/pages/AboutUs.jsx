@@ -107,17 +107,7 @@ function AboutUs() {
               </p>
             </div>
 
-            {/* RIGHT IMAGE */}
-            <div
-              className="rounded-2xl overflow-hidden shadow-lg"
-              style={{ animation: "fadeIn 1s ease-out forwards" }}
-            >
-              <img
-                src="https://images.unsplash.com/photo-1556740749-887f6717d7e4"
-                alt="Our Mission"
-                className="w-full h-full object-cover"
-              />
-            </div>
+            
 
           </div>
         </div>
