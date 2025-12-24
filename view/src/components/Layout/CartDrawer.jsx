@@ -59,7 +59,8 @@ function CartDrawer({ drawerOpen, toggleCartDrawer }) {
     toggleCartDrawer();
 
     if (!user) {
-      navigate("/login?redirect=/checkout");
+      // ✅ FIX: pass redirect using state
+      navigate("/login", { state: { from: "/checkout" } });
     } else {
       navigate("/checkout");
     }
@@ -99,5 +100,6 @@ function CartDrawer({ drawerOpen, toggleCartDrawer }) {
 }
 
 export default CartDrawer;
+
 
 
