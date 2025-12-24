@@ -30,8 +30,8 @@ function AboutUs() {
 
   return (
     <div className="text-gray-800">
-      
-      {/* HERO SECTION - FULL SCREEN */}
+
+      {/* HERO SECTION */}
       <section
         className="min-h-screen flex items-center justify-center text-center relative"
         style={{
@@ -45,9 +45,7 @@ function AboutUs() {
           className="max-w-4xl px-6 text-white"
           style={{ animation: "fadeIn 1s ease-out forwards" }}
         >
-          <h1 className="text-5xl font-bold mb-6">
-            About Us
-          </h1>
+          <h1 className="text-5xl font-bold mb-6">About Us</h1>
           <p className="text-lg leading-relaxed text-gray-200">
             We deliver a seamless and secure shopping experience by offering
             quality products, transparent pricing, and reliable service.
@@ -76,9 +74,7 @@ function AboutUs() {
                   opacity: 0,
                 }}
               >
-                <h3 className="text-xl font-semibold mb-3">
-                  {item.title}
-                </h3>
+                <h3 className="text-xl font-semibold mb-3">{item.title}</h3>
                 <p className="text-gray-600 text-sm leading-relaxed">
                   {item.desc}
                 </p>
@@ -88,7 +84,46 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* INLINE KEYFRAMES */}
+      {/* HALF SECTION */}
+      <section className="py-24 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-6">
+          <div className="grid lg:grid-cols-2 gap-12 items-center">
+
+            {/* LEFT CONTENT */}
+            <div
+              className="space-y-6"
+              style={{ animation: "fadeIn 0.8s ease-out forwards" }}
+            >
+              <h2 className="text-3xl font-bold">Our Mission</h2>
+              <p className="text-gray-600 leading-relaxed">
+                Our mission is to create a trustworthy and customer-first
+                shopping platform where quality, affordability, and convenience
+                come together.
+              </p>
+              <p className="text-gray-600 leading-relaxed">
+                We focus on building long-term relationships by delivering value
+                through carefully curated products, secure payments, and
+                dependable delivery.
+              </p>
+            </div>
+
+            {/* RIGHT IMAGE */}
+            <div
+              className="rounded-2xl overflow-hidden shadow-lg"
+              style={{ animation: "fadeIn 1s ease-out forwards" }}
+            >
+              <img
+                src="https://images.unsplash.com/photo-1556740749-887f6717d7e4"
+                alt="Our Mission"
+                className="w-full h-full object-cover"
+              />
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      {/* KEYFRAMES */}
       <style>
         {`
           @keyframes fadeIn {
@@ -103,6 +138,7 @@ function AboutUs() {
           }
         `}
       </style>
+
     </div>
   );
 }
