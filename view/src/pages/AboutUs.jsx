@@ -1,61 +1,90 @@
 import React from "react";
 
 function AboutUs() {
+  const features = [
+    {
+      title: "Premium Quality",
+      desc: "Products curated to meet the highest quality standards.",
+    },
+    {
+      title: "Secure Payments",
+      desc: "Trusted and encrypted payment gateways.",
+    },
+    {
+      title: "Fast Delivery",
+      desc: "Quick shipping with real-time tracking.",
+    },
+    {
+      title: "Customer Support",
+      desc: "Friendly and responsive support team.",
+    },
+    {
+      title: "Easy Returns",
+      desc: "Hassle-free return and refund policy.",
+    },
+    {
+      title: "Trusted Brand",
+      desc: "Loved by thousands of happy customers.",
+    },
+  ];
+
   return (
-    <div className="bg-white text-gray-800">
+    <div className="text-gray-800">
       
-      {/* SECTION 1 */}
-      <section className="py-20 bg-gray-50">
+      {/* HERO SECTION - FULL SCREEN */}
+      <section
+        className="min-h-screen flex items-center justify-center text-center relative"
+        style={{
+          backgroundImage:
+            "linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)), url('https://images.unsplash.com/photo-1523275335684-37898b6baf30')",
+          backgroundSize: "cover",
+          backgroundPosition: "center",
+        }}
+      >
         <div
-          className="max-w-6xl mx-auto px-6 text-center"
-          style={{
-            animation: "fadeIn 0.8s ease-out forwards",
-          }}
+          className="max-w-4xl px-6 text-white"
+          style={{ animation: "fadeIn 1s ease-out forwards" }}
         >
-          <h1 className="text-4xl font-bold mb-4 transition-transform duration-500 hover:scale-105">
+          <h1 className="text-5xl font-bold mb-6">
             About Us
           </h1>
-          <p className="text-lg text-gray-600 max-w-3xl mx-auto">
-            We create a seamless and secure shopping experience by delivering
-            quality products that fit your everyday needs.
+          <p className="text-lg leading-relaxed text-gray-200">
+            We deliver a seamless and secure shopping experience by offering
+            quality products, transparent pricing, and reliable service.
           </p>
         </div>
       </section>
 
-      {/* SECTION 2 */}
-      <section className="py-20">
-        <div className="max-w-6xl mx-auto px-6 grid sm:grid-cols-2 lg:grid-cols-4 gap-8">
-          {[
-            {
-              title: "Trusted Quality",
-              desc: "Every product is carefully selected to meet high standards.",
-            },
-            {
-              title: "Secure Payments",
-              desc: "Safe and reliable payment methods you can trust.",
-            },
-            {
-              title: "Fast Delivery",
-              desc: "Quick shipping with real-time order tracking.",
-            },
-            {
-              title: "Customer Support",
-              desc: "Friendly support whenever you need assistance.",
-            },
-          ].map((item, index) => (
-            <div
-              key={index}
-              className="border rounded-xl p-6 text-center transform transition-all duration-500 hover:-translate-y-2 hover:shadow-lg"
-              style={{
-                animation: `fadeIn 0.8s ease-out forwards`,
-                animationDelay: `${index * 0.15}s`,
-                opacity: 0,
-              }}
-            >
-              <h3 className="font-semibold text-lg mb-2">{item.title}</h3>
-              <p className="text-gray-600 text-sm">{item.desc}</p>
-            </div>
-          ))}
+      {/* FEATURES SECTION */}
+      <section className="py-24 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          <h2
+            className="text-3xl font-bold text-center mb-14"
+            style={{ animation: "fadeIn 0.8s ease-out forwards" }}
+          >
+            Why Choose Us
+          </h2>
+
+          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-10">
+            {features.map((item, index) => (
+              <div
+                key={index}
+                className="bg-gray-50 rounded-2xl p-8 text-center transform transition-all duration-500 hover:-translate-y-3 hover:shadow-xl"
+                style={{
+                  animation: "fadeIn 0.8s ease-out forwards",
+                  animationDelay: `${index * 0.15}s`,
+                  opacity: 0,
+                }}
+              >
+                <h3 className="text-xl font-semibold mb-3">
+                  {item.title}
+                </h3>
+                <p className="text-gray-600 text-sm leading-relaxed">
+                  {item.desc}
+                </p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
@@ -65,7 +94,7 @@ function AboutUs() {
           @keyframes fadeIn {
             from {
               opacity: 0;
-              transform: translateY(20px);
+              transform: translateY(30px);
             }
             to {
               opacity: 1;
