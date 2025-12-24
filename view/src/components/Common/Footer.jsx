@@ -67,7 +67,7 @@ function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="pages/AboutUs" className='hover:text-gray-500 transition-colors'>
+              <Link to="about-us" className='hover:text-gray-500 transition-colors'>
                 About Us
               </Link>
             </li>
