@@ -184,7 +184,7 @@ function AboutUs() {
         </div>
       </section>
 
-      
+    
       <style jsx>{`
         div::-webkit-scrollbar {
           display: none;
