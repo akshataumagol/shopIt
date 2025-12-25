@@ -46,11 +46,13 @@ function AboutUs() {
   ];
 
   const scrollLeft = () => {
-    sliderRef.current.scrollBy({ left: -350, behavior: "smooth" });
+    const width = sliderRef.current.offsetWidth;
+    sliderRef.current.scrollLeft -= width * 0.8;
   };
 
   const scrollRight = () => {
-    sliderRef.current.scrollBy({ left: 350, behavior: "smooth" });
+    const width = sliderRef.current.offsetWidth;
+    sliderRef.current.scrollLeft += width * 0.8;
   };
 
   return (
@@ -93,15 +95,13 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* HORIZONTAL IMPACT SLIDER */}
-      <section className="py-28 bg-gray-100 relative">
-        <div className="max-w-7xl mx-auto px-6 relative">
+      {/* IMPACT SLIDER */}
+      <section className="py-28 bg-gray-100">
+        <div className="max-w-7xl mx-auto px-6">
 
-          {/* HEADER */}
           <div className="flex items-center justify-between mb-10">
             <h2 className="text-4xl font-bold">Our Impact</h2>
 
-            {/* ARROWS */}
             <div className="flex gap-4">
               <button
                 onClick={scrollLeft}
@@ -118,21 +118,16 @@ function AboutUs() {
             </div>
           </div>
 
-          {/* SLIDER */}
           <div
             ref={sliderRef}
-            className="flex gap-8 overflow-x-hidden scroll-smooth"
+            className="flex gap-8 overflow-x-hidden transition-all duration-300"
           >
             {impactItems.map((item, index) => (
               <div
                 key={index}
-                className="min-w-[320px] lg:min-w-[380px] bg-white rounded-3xl shadow-xl overflow-hidden hover:-translate-y-2 transition-all duration-500"
+                className="min-w-[320px] lg:min-w-[400px] bg-white rounded-3xl shadow-xl overflow-hidden hover:-translate-y-2 transition-all duration-500"
               >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="h-48 w-full object-cover"
-                />
+                <img src={item.img} alt={item.title} className="h-52 w-full object-cover" />
                 <div className="p-8">
                   <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-sm">{item.desc}</p>
@@ -141,6 +136,31 @@ function AboutUs() {
             ))}
           </div>
 
+        </div>
+      </section>
+
+      {/* NEW SECTION – OUR PROCESS */}
+      <section className="py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-6 text-center">
+          <h2 className="text-4xl font-bold mb-16">How We Work</h2>
+
+          <div className="grid md:grid-cols-4 gap-10">
+            {[
+              { step: "01", title: "Curate Products", desc: "We select only top-quality items." },
+              { step: "02", title: "Secure Checkout", desc: "Encrypted and trusted payments." },
+              { step: "03", title: "Fast Shipping", desc: "Reliable and quick delivery." },
+              { step: "04", title: "After Support", desc: "We stay with you post-purchase." },
+            ].map((item, i) => (
+              <div
+                key={i}
+                className="bg-gray-50 rounded-2xl p-8 hover:shadow-xl transition"
+              >
+                <span className="text-5xl font-bold text-gray-300">{item.step}</span>
+                <h3 className="text-xl font-semibold mt-4 mb-2">{item.title}</h3>
+                <p className="text-gray-600 text-sm">{item.desc}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
