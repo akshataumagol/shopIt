@@ -1,7 +1,7 @@
 import React, { useRef } from "react";
 
 function AboutUs() {
-  const scrollRef = useRef(null);
+  const impactScrollRef = useRef(null);
 
   const features = [
     { title: "Premium Quality", desc: "Products curated to meet the highest quality standards." },
@@ -21,8 +21,13 @@ function AboutUs() {
     { title: "99.9%", desc: "System Uptime" },
   ];
 
-  const handleScroll = () => {
-    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  const scrollImpact = () => {
+    if (impactScrollRef.current) {
+      impactScrollRef.current.scrollTo({
+        top: impactScrollRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
@@ -122,41 +127,31 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* SECTION 5 – CLICK TO SCROLL (6 ITEMS) */}
+      {/* IMPACT – SCROLLABLE */}
       <section className="py-28 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
 
           {/* LEFT STICKY */}
-          <div className="sticky top-32 space-y-6">
+          <div className="sticky top-32 space-y-6 h-fit">
             <h2 className="text-4xl font-bold">Our Impact</h2>
             <p className="text-gray-600 leading-relaxed">
-              A snapshot of what we’ve achieved so far.
+              A snapshot of measurable achievements.
             </p>
 
             <button
-              onClick={handleScroll}
-              className="inline-block mt-4 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition"
+              onClick={scrollImpact}
+              className="px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition"
             >
               View More ↓
             </button>
           </div>
 
           {/* RIGHT SCROLLABLE */}
-          <div className="space-y-8">
-            {impactItems.slice(0, 3).map((item, i) => (
-              <div
-                key={i}
-                className="bg-white rounded-2xl p-8 shadow-lg animate-fadeIn"
-              >
-                <h3 className="text-3xl font-bold">{item.title}</h3>
-                <p className="text-gray-500 mt-2 text-sm">{item.desc}</p>
-              </div>
-            ))}
-
-            {/* SCROLL TARGET */}
-            <div ref={scrollRef} />
-
-            {impactItems.slice(3).map((item, i) => (
+          <div
+            ref={impactScrollRef}
+            className="max-h-[480px] overflow-y-auto space-y-8 pr-2 scroll-smooth"
+          >
+            {impactItems.map((item, i) => (
               <div
                 key={i}
                 className="bg-white rounded-2xl p-8 shadow-lg animate-fadeIn"
