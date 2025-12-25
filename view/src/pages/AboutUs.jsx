@@ -33,24 +33,11 @@ function AboutUs() {
       desc: "Serving customers across borders.",
       img: "https://images.unsplash.com/photo-1500530855697-b586d89ba3ee",
     },
-    {
-      title: "5M+ Visitors",
-      desc: "Monthly traffic powered by trust.",
-      img: "https://images.unsplash.com/photo-1504384308090-c894fdcc538d",
-    },
-    {
-      title: "99.9% Uptime",
-      desc: "Reliable systems & secure tech.",
-      img: "https://images.unsplash.com/photo-1518770660439-4636190af475",
-    },
   ];
 
   const scroll = (direction) => {
-    const card = sliderRef.current.querySelector(".slide");
-    const cardWidth = card.offsetWidth + 32;
-
     sliderRef.current.scrollBy({
-      left: direction === "right" ? cardWidth : -cardWidth,
+      left: direction === "right" ? 420 : -420,
       behavior: "smooth",
     });
   };
@@ -95,7 +82,7 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* SLIDER (SCROLLBAR HIDDEN) */}
+      {/* ✅ FIXED SMOOTH SLIDER */}
       <section className="py-28 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6">
 
@@ -105,13 +92,13 @@ function AboutUs() {
             <div className="flex gap-3">
               <button
                 onClick={() => scroll("left")}
-                className="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center hover:bg-gray-900 hover:text-white transition"
+                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition"
               >
                 ‹
               </button>
               <button
                 onClick={() => scroll("right")}
-                className="w-12 h-12 rounded-full bg-white shadow flex items-center justify-center hover:bg-gray-900 hover:text-white transition"
+                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition"
               >
                 ›
               </button>
@@ -120,18 +107,14 @@ function AboutUs() {
 
           <div
             ref={sliderRef}
-            className="slider flex gap-8 overflow-x-auto scroll-smooth snap-x snap-mandatory"
+            className="slider flex gap-8 overflow-x-auto scroll-smooth"
           >
             {impactItems.map((item, index) => (
               <div
                 key={index}
-                className="slide snap-start min-w-[380px] bg-white rounded-3xl shadow-xl overflow-hidden"
+                className="min-w-[400px] bg-white rounded-3xl shadow-xl overflow-hidden hover:-translate-y-2 transition"
               >
-                <img
-                  src={item.img}
-                  alt={item.title}
-                  className="h-56 w-full object-cover"
-                />
+                <img src={item.img} alt="" className="h-56 w-full object-cover" />
                 <div className="p-8">
                   <h3 className="text-2xl font-bold mb-2">{item.title}</h3>
                   <p className="text-gray-600 text-sm">{item.desc}</p>
@@ -143,43 +126,56 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* DIFFERENT 4TH SECTION */}
-      <section className="py-28 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-20">
+      {/* 🔥 COMPLETELY DIFFERENT 4TH SECTION */}
+      <section className="py-28 bg-black text-white">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
+
+          {/* LEFT */}
           <div>
-            <h2 className="text-4xl font-bold mb-6">How We Think</h2>
-            <p className="text-gray-600 leading-relaxed">
-              We don’t chase trends. We build systems that last, scale,
-              and earn trust over time.
+            <h2 className="text-5xl font-bold mb-6">
+              Built for Scale.<br />Designed for Trust.
+            </h2>
+            <p className="text-gray-300 leading-relaxed mb-10">
+              We don’t experiment with customer trust.
+              Every system, workflow, and delivery is engineered for reliability.
             </p>
+
+            <div className="grid grid-cols-3 gap-6 text-center">
+              <div>
+                <p className="text-4xl font-bold">5+</p>
+                <p className="text-gray-400 text-sm">Years</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold">50K+</p>
+                <p className="text-gray-400 text-sm">Orders</p>
+              </div>
+              <div>
+                <p className="text-4xl font-bold">99%</p>
+                <p className="text-gray-400 text-sm">Trust</p>
+              </div>
+            </div>
           </div>
 
-          <div className="grid grid-cols-2 gap-8">
-            {["Clarity", "Security", "Speed", "Support"].map((item, i) => (
+          {/* RIGHT */}
+          <div className="grid grid-cols-2 gap-6">
+            {["Transparency", "Security", "Consistency", "Performance"].map((item, i) => (
               <div
                 key={i}
-                className="bg-gray-100 rounded-2xl p-10 text-center hover:shadow-lg transition"
+                className="border border-gray-700 rounded-2xl p-10 text-center hover:bg-white hover:text-black transition"
               >
                 <h4 className="text-xl font-semibold">{item}</h4>
               </div>
             ))}
           </div>
+
         </div>
       </section>
 
-     
+      {/* SCROLLBAR HIDE */}
       <style>
         {`
-          .slider::-webkit-scrollbar {
-            display: none;
-          }
-          .slider {
-            -ms-overflow-style: none;
-            scrollbar-width: none;
-          }
-          html, body {
-            overflow-x: hidden;
-          }
+          .slider::-webkit-scrollbar { display: none; }
+          .slider { scrollbar-width: none; }
         `}
       </style>
 
