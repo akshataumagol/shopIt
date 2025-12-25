@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useRef } from "react";
 
 function AboutUs() {
+  const scrollRef = useRef(null);
+
   const features = [
     { title: "Premium Quality", desc: "Products curated to meet the highest quality standards." },
     { title: "Secure Payments", desc: "Trusted and encrypted payment gateways." },
@@ -9,6 +11,19 @@ function AboutUs() {
     { title: "Easy Returns", desc: "Hassle-free return and refund policy." },
     { title: "Trusted Brand", desc: "Loved by thousands of happy customers." },
   ];
+
+  const impactItems = [
+    { title: "50K+", desc: "Orders Delivered" },
+    { title: "98%", desc: "Customer Satisfaction" },
+    { title: "100+", desc: "Partner Brands" },
+    { title: "20+", desc: "Countries Served" },
+    { title: "5M+", desc: "Monthly Visitors" },
+    { title: "99.9%", desc: "System Uptime" },
+  ];
+
+  const handleScroll = () => {
+    scrollRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <div className="text-gray-800 overflow-x-hidden">
@@ -78,74 +93,73 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* SECTION 1 – SCROLL LEFT / STICKY RIGHT */}
+      {/* TIMELINE */}
       <section className="py-28 bg-white">
         <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
-
-          {/* LEFT SCROLL */}
           <div className="space-y-12">
-            {[
-              { year: "2021", title: "The Beginning", desc: "Started with a simple but powerful vision." },
-              { year: "2022", title: "Rapid Growth", desc: "Expanded products and logistics nationwide." },
-              { year: "2023", title: "Customer Trust", desc: "Thousands of satisfied repeat customers." },
-              { year: "2024", title: "Innovation Focus", desc: "Improved technology and service reliability." },
-            ].map((item, i) => (
-              <div
-                key={i}
-                className="border-l-4 border-gray-800 pl-6 animate-fadeIn"
-                style={{ animationDelay: `${i * 0.2}s` }}
-              >
-                <span className="text-sm text-gray-400">{item.year}</span>
-                <h3 className="text-xl font-semibold mt-1">{item.title}</h3>
-                <p className="text-gray-600 mt-2">{item.desc}</p>
+            {["2021", "2022", "2023", "2024"].map((year, i) => (
+              <div key={i} className="border-l-4 border-gray-800 pl-6 animate-fadeIn">
+                <span className="text-sm text-gray-400">{year}</span>
+                <h3 className="text-xl font-semibold mt-1">Milestone {i + 1}</h3>
+                <p className="text-gray-600 mt-2">
+                  Strategic growth and customer-focused improvements.
+                </p>
               </div>
             ))}
           </div>
 
-          {/* RIGHT STICKY */}
           <div className="sticky top-28 h-fit">
             <div className="bg-gray-900 text-white rounded-3xl p-10 shadow-2xl">
               <h2 className="text-3xl font-bold mb-4">Our Values</h2>
-              <p className="text-gray-300 mb-6">
-                These values shape our culture and decisions.
-              </p>
               <ul className="space-y-4 text-sm">
-                <li>✔ Integrity in everything</li>
-                <li>✔ Customer-first thinking</li>
-                <li>✔ Quality over quantity</li>
-                <li>✔ Long-term vision</li>
+                <li>✔ Integrity</li>
+                <li>✔ Reliability</li>
+                <li>✔ Innovation</li>
+                <li>✔ Customer First</li>
               </ul>
             </div>
           </div>
-
         </div>
       </section>
 
-      {/* SECTION 2 – DIFFERENT (STICKY LEFT + FLOATING CARDS) */}
+      {/* SECTION 5 – CLICK TO SCROLL (6 ITEMS) */}
       <section className="py-28 bg-gray-100">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16 items-start">
+        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-16">
 
           {/* LEFT STICKY */}
-          <div className="sticky top-32">
-            <h2 className="text-4xl font-bold mb-6">Our Impact</h2>
+          <div className="sticky top-32 space-y-6">
+            <h2 className="text-4xl font-bold">Our Impact</h2>
             <p className="text-gray-600 leading-relaxed">
-              Beyond sales, we focus on creating meaningful impact through
-              reliability, customer trust, and operational excellence.
+              A snapshot of what we’ve achieved so far.
             </p>
+
+            <button
+              onClick={handleScroll}
+              className="inline-block mt-4 px-6 py-3 bg-gray-900 text-white rounded-full hover:bg-gray-800 transition"
+            >
+              View More ↓
+            </button>
           </div>
 
-          {/* RIGHT FLOATING CARDS */}
-          <div className="grid sm:grid-cols-2 gap-8">
-            {[
-              { title: "50K+", desc: "Orders Delivered" },
-              { title: "98%", desc: "Customer Satisfaction" },
-              { title: "100+", desc: "Partner Brands" },
-              { title: "24/7", desc: "Support Availability" },
-            ].map((item, i) => (
+          {/* RIGHT SCROLLABLE */}
+          <div className="space-y-8">
+            {impactItems.slice(0, 3).map((item, i) => (
               <div
                 key={i}
-                className="bg-white rounded-2xl p-8 shadow-lg hover:-translate-y-2 transition-all duration-500 animate-fadeIn"
-                style={{ animationDelay: `${i * 0.15}s` }}
+                className="bg-white rounded-2xl p-8 shadow-lg animate-fadeIn"
+              >
+                <h3 className="text-3xl font-bold">{item.title}</h3>
+                <p className="text-gray-500 mt-2 text-sm">{item.desc}</p>
+              </div>
+            ))}
+
+            {/* SCROLL TARGET */}
+            <div ref={scrollRef} />
+
+            {impactItems.slice(3).map((item, i) => (
+              <div
+                key={i}
+                className="bg-white rounded-2xl p-8 shadow-lg animate-fadeIn"
               >
                 <h3 className="text-3xl font-bold">{item.title}</h3>
                 <p className="text-gray-500 mt-2 text-sm">{item.desc}</p>
@@ -160,14 +174,8 @@ function AboutUs() {
       <style>
         {`
           @keyframes fadeIn {
-            from {
-              opacity: 0;
-              transform: translateY(30px);
-            }
-            to {
-              opacity: 1;
-              transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
           }
           .animate-fadeIn {
             animation: fadeIn 0.8s ease-out forwards;
