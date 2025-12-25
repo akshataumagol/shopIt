@@ -36,10 +36,12 @@ function AboutUs() {
   ];
 
   const scroll = (direction) => {
-    sliderRef.current.scrollBy({
-      left: direction === "right" ? 420 : -420,
-      behavior: "smooth",
-    });
+    if (sliderRef.current) {
+      sliderRef.current.scrollBy({
+        left: direction === "right" ? 420 : -420,
+        behavior: "smooth",
+      });
+    }
   };
 
   return (
@@ -82,7 +84,7 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* ✅ FIXED SMOOTH SLIDER */}
+      {/* IMPACT SLIDER - FIXED */}
       <section className="py-28 bg-gray-100">
         <div className="max-w-7xl mx-auto px-6">
 
@@ -92,13 +94,13 @@ function AboutUs() {
             <div className="flex gap-3">
               <button
                 onClick={() => scroll("left")}
-                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition"
+                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition flex items-center justify-center text-2xl"
               >
                 ‹
               </button>
               <button
                 onClick={() => scroll("right")}
-                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition"
+                className="w-12 h-12 rounded-full bg-white shadow hover:bg-gray-900 hover:text-white transition flex items-center justify-center text-2xl"
               >
                 ›
               </button>
@@ -107,12 +109,16 @@ function AboutUs() {
 
           <div
             ref={sliderRef}
-            className="slider flex gap-8 overflow-x-auto scroll-smooth"
+            className="flex gap-8 overflow-x-scroll scroll-smooth"
+            style={{
+              scrollbarWidth: "none",
+              msOverflowStyle: "none",
+            }}
           >
             {impactItems.map((item, index) => (
               <div
                 key={index}
-                className="min-w-[400px] bg-white rounded-3xl shadow-xl overflow-hidden hover:-translate-y-2 transition"
+                className="flex-shrink-0 w-96 bg-white rounded-3xl shadow-xl overflow-hidden hover:-translate-y-2 transition"
               >
                 <img src={item.img} alt="" className="h-56 w-full object-cover" />
                 <div className="p-8">
@@ -126,58 +132,64 @@ function AboutUs() {
         </div>
       </section>
 
-      {/* 🔥 COMPLETELY DIFFERENT 4TH SECTION */}
-      <section className="py-28 bg-black text-white">
-        <div className="max-w-7xl mx-auto px-6 grid lg:grid-cols-2 gap-20 items-center">
-
-          {/* LEFT */}
-          <div>
-            <h2 className="text-5xl font-bold mb-6">
-              Built for Scale.<br />Designed for Trust.
+      {/* NEW 4TH SECTION - 4 BOXES SIDE BY SIDE */}
+      <section className="py-28 bg-white">
+        <div className="max-w-7xl mx-auto px-6">
+          
+          <div className="text-center mb-16">
+            <h2 className="text-4xl font-bold mb-4">
+              Our Core Values
             </h2>
-            <p className="text-gray-300 leading-relaxed mb-10">
-              We don’t experiment with customer trust.
-              Every system, workflow, and delivery is engineered for reliability.
+            <p className="text-gray-600 text-lg">
+              What drives us to deliver excellence every single day
             </p>
-
-            <div className="grid grid-cols-3 gap-6 text-center">
-              <div>
-                <p className="text-4xl font-bold">5+</p>
-                <p className="text-gray-400 text-sm">Years</p>
-              </div>
-              <div>
-                <p className="text-4xl font-bold">50K+</p>
-                <p className="text-gray-400 text-sm">Orders</p>
-              </div>
-              <div>
-                <p className="text-4xl font-bold">99%</p>
-                <p className="text-gray-400 text-sm">Trust</p>
-              </div>
-            </div>
           </div>
 
-          {/* RIGHT */}
-          <div className="grid grid-cols-2 gap-6">
-            {["Transparency", "Security", "Consistency", "Performance"].map((item, i) => (
-              <div
-                key={i}
-                className="border border-gray-700 rounded-2xl p-10 text-center hover:bg-white hover:text-black transition"
-              >
-                <h4 className="text-xl font-semibold">{item}</h4>
-              </div>
-            ))}
+          <div className="grid grid-cols-4 gap-6">
+            
+            <div className="bg-gradient-to-br from-blue-500 to-blue-600 rounded-2xl p-8 text-white text-center hover:scale-105 transition-transform duration-300">
+              <div className="text-5xl mb-4">🚀</div>
+              <h3 className="text-xl font-bold mb-3">Innovation</h3>
+              <p className="text-blue-100 text-sm">
+                Leading with cutting-edge solutions
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-green-500 to-green-600 rounded-2xl p-8 text-white text-center hover:scale-105 transition-transform duration-300">
+              <div className="text-5xl mb-4">🎯</div>
+              <h3 className="text-xl font-bold mb-3">Precision</h3>
+              <p className="text-green-100 text-sm">
+                Excellence in every detail
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-purple-500 to-purple-600 rounded-2xl p-8 text-white text-center hover:scale-105 transition-transform duration-300">
+              <div className="text-5xl mb-4">💡</div>
+              <h3 className="text-xl font-bold mb-3">Creativity</h3>
+              <p className="text-purple-100 text-sm">
+                Thinking beyond boundaries
+              </p>
+            </div>
+
+            <div className="bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl p-8 text-white text-center hover:scale-105 transition-transform duration-300">
+              <div className="text-5xl mb-4">🌟</div>
+              <h3 className="text-xl font-bold mb-3">Excellence</h3>
+              <p className="text-orange-100 text-sm">
+                Outstanding results always
+              </p>
+            </div>
+
           </div>
 
         </div>
       </section>
 
-      {/* SCROLLBAR HIDE */}
-      <style>
-        {`
-          .slider::-webkit-scrollbar { display: none; }
-          .slider { scrollbar-width: none; }
-        `}
-      </style>
+      
+      <style jsx>{`
+        div::-webkit-scrollbar {
+          display: none;
+        }
+      `}</style>
 
     </div>
   );
