@@ -61,6 +61,7 @@ import UserLayout from "./components/Layout/UserLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AboutUs from "./pages/AboutUs";
+import AboutUs from "./pages/ContactUs";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import TrackOrder from "./pages/TrackOrder";
@@ -83,6 +84,7 @@ function App() {
             <Route path="register" element={<Register />} />
             <Route path="profile" element={<Profile />} />
             <Route path="/about-us" element={<AboutUs />} />
+               <Route path="/contact" element={<ContactUs />} />
 
             <Route path="/track-order/:orderId" element={<TrackOrder />} />
             
