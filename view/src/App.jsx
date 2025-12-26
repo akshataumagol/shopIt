@@ -61,7 +61,7 @@ import UserLayout from "./components/Layout/UserLayout";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import AboutUs from "./pages/AboutUs";
-import AboutUs from "./pages/ContactUs";
+import ContactUs from "./pages/ContactUs";
 import Register from "./pages/Register";
 import Profile from "./pages/Profile";
 import TrackOrder from "./pages/TrackOrder";
