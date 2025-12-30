@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 import axios from "axios";
 
+const BASE_URL = "https://shopit-56mz.onrender.com";
+
 const ContactUs = () => {
   const [formData, setFormData] = useState({ name: "", email: "", message: "" });
-  const [status, setStatus] = useState(null); // success or error message
+  const [status, setStatus] = useState(null); 
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -12,7 +14,7 @@ const ContactUs = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      const res = await axios.post("http://localhost:5000/api/contact", formData); // your API endpoint
+      const res = await axios.post(`${BASE_URL}/api/contact`, formData);
       setStatus({ type: "success", message: res.data.message });
       setFormData({ name: "", email: "", message: "" });
     } catch (err) {
