@@ -1,34 +1,36 @@
 import React, { useState } from "react";
+import axios from "axios";
 
 const ContactUs = () => {
-  const [formData, setFormData] = useState({
-    name: "",
-    email: "",
-    message: "",
-  });
+  const [formData, setFormData] = useState({ name: "", email: "", message: "" });
+  const [status, setStatus] = useState(null); // success or error message
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log(formData);
-    setFormData({ name: "", email: "", message: "" });
+    try {
+      const res = await axios.post("http://localhost:5000/api/contact", formData); // your API endpoint
+      setStatus({ type: "success", message: res.data.message });
+      setFormData({ name: "", email: "", message: "" });
+    } catch (err) {
+      setStatus({ type: "error", message: err.response?.data?.message || "Something went wrong" });
+    }
   };
 
   return (
     <div className="w-full">
 
-      {/* Hero Section */}
-      <section className="min-h-screen flex items-center justify-center text-center bg-gradient-to-br from-gray-100 via-white to-gray-200 animate-gradient bg-[length:400%_400%]">
+      {/* Hero Section - 80vh */}
+      <section className="h-[80vh] flex items-center justify-center text-center bg-gradient-to-br from-gray-100 via-white to-gray-200 animate-gradient bg-[length:400%_400%] relative overflow-hidden">
         <div className="max-w-3xl">
           <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 opacity-0 translate-y-5 animate-fadeSlideUp">
             Contact Us
           </h1>
           <p className="text-gray-600 text-lg md:text-xl opacity-0 translate-y-5 animate-fadeSlideUp animation-delay-300">
-            Have a question, feedback, or want to work with us?  
-            Reach out and we’ll respond as soon as possible.
+            Have a question, feedback, or want to work with us? Reach out and we’ll respond as soon as possible.
           </p>
         </div>
       </section>
@@ -53,6 +55,17 @@ const ContactUs = () => {
           {/* Contact Form */}
           <div className="p-12">
             <h2 className="text-2xl font-semibold text-gray-800 mb-6">Send a Message</h2>
+
+            {status && (
+              <div
+                className={`mb-4 px-4 py-3 rounded ${
+                  status.type === "success" ? "bg-green-200 text-green-800" : "bg-red-200 text-red-800"
+                }`}
+              >
+                {status.message}
+              </div>
+            )}
+
             <form onSubmit={handleSubmit} className="space-y-5">
               <input
                 type="text"
@@ -93,7 +106,7 @@ const ContactUs = () => {
         </div>
       </section>
 
-      {/* Tailwind Keyframes (using tailwind.config.js) */}
+      {/* Tailwind Keyframes */}
       <style>
         {`
           @keyframes fadeSlideUp {
