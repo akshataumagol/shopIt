@@ -17,7 +17,7 @@ const Cursor = () => {
     const addHover = () => setHovered(true);
     const removeHover = () => setHovered(false);
 
-    const elements = document.querySelectorAll("button, a");
+    const elements = document.querySelectorAll("button, a, .cursor-hover");
     elements.forEach((el) => {
       el.addEventListener("mouseenter", addHover);
       el.addEventListener("mouseleave", removeHover);
@@ -33,10 +33,10 @@ const Cursor = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-50 transition-all duration-150 ease-out
-        ${hovered ? "bg-blue-500 scale-150" : "bg-gray-800 scale-100"}`}
+      className={`fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-50 transition-all duration-200 ease-out
+        ${hovered ? "bg-white opacity-80 scale-150" : "bg-white opacity-50 scale-100"}`}
       style={{
-        transform: `translate3d(${position.x - 12}px, ${position.y - 12}px, 0)`,
+        transform: `translate3d(${position.x - 12}px, ${position.y - 12}px, 0)`, // Centered and smaller cursor
       }}
     ></div>
   );
