@@ -1,3 +1,4 @@
+// src/components/Common/CustomCursor.jsx
 import React, { useEffect, useState } from "react";
 
 const Cursor = () => {
@@ -38,7 +39,7 @@ const Cursor = () => {
 
   return (
     <div
-      className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-50 transition-all duration-200 ease-out
+      className={`fixed top-0 left-0 w-8 h-8 rounded-full pointer-events-none z-[9999] transition-all duration-200 ease-out
         ${hovered ? "bg-red-500 opacity-80 scale-150" : "bg-red-500 opacity-50 scale-100"}`}
       style={{
         transform: `translate3d(${position.x - 16}px, ${position.y - 16}px, 0)`, // Adjusted to center the cursor correctly
