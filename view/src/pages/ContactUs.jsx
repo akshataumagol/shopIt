@@ -20,18 +20,24 @@ const ContactUs = () => {
   return (
     <div className="w-full">
 
-      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 px-4">
-        <div className="text-center max-w-3xl animate-fadeIn">
-          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 animate-slideUp">
+      {/* Animated Hero Section */}
+      <section className="min-h-screen flex items-center justify-center bg-gradient-to-br from-gray-100 via-white to-gray-200 px-4 relative overflow-hidden">
+        {/* Floating shapes for subtle animation */}
+        <div className="absolute top-10 left-10 w-20 h-20 bg-blue-200 rounded-full opacity-30 animate-bounce-slow"></div>
+        <div className="absolute bottom-20 right-10 w-32 h-32 bg-pink-200 rounded-full opacity-20 animate-bounce-slow delay-300"></div>
+
+        <div className="text-center max-w-3xl">
+          <h1 className="text-4xl md:text-6xl font-bold text-gray-800 mb-6 animate-fadeIn animate-slideUp">
             Contact Us
           </h1>
-          <p className="text-gray-600 text-lg md:text-xl animate-slideUp delay-200">
+          <p className="text-gray-600 text-lg md:text-xl animate-fadeIn animate-slideUp delay-200">
             Have a question, feedback, or want to work with us?  
             Reach out and we’ll respond as soon as possible.
           </p>
         </div>
       </section>
 
+      {/* Contact Card Section */}
       <section className="bg-gray-50 py-24 px-4">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-2 bg-white rounded-2xl shadow-xl overflow-hidden animate-fadeInUp">
@@ -49,7 +55,7 @@ const ContactUs = () => {
               <div className="space-y-6 text-gray-700">
                 <div className="flex items-center gap-4">
                   <span className="text-xl">📍</span>
-                  <p>Kothrud, pune</p>
+                  <p>Kothrud, Pune</p>
                 </div>
 
                 <div className="flex items-center gap-4">
