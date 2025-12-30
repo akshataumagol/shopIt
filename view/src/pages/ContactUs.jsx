@@ -49,17 +49,17 @@ const ContactUs = () => {
               <div className="space-y-6 text-gray-700">
                 <div className="flex items-center gap-4">
                   <span className="text-xl">📍</span>
-                  <p>123 Business Street, New York, USA</p>
+                  <p>Kothrud, pune</p>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <span className="text-xl">📞</span>
-                  <p>+1 234 567 890</p>
+                  <p>+91 9325132576</p>
                 </div>
 
                 <div className="flex items-center gap-4">
                   <span className="text-xl">✉️</span>
-                  <p>contact@yourcompany.com</p>
+                  <p>akshumagol2000@gmail.com</p>
                 </div>
               </div>
             </div>
