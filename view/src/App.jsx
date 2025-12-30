@@ -70,12 +70,14 @@ import OrderConfirmation from "./pages/OrderConfirmationPage";
 import CollectionPage from "./pages/CollectionPage";
 import ProductDetails from "./components/Products/ProductDetails";
 import ProtectedRoute from "./components/Common/ProtectedRoute";
+import ProtectedRoute from "./components/Common/Cursor;
 import { Toaster } from "sonner";
 
 function App() {
   return (
     <CartProvider>
       <BrowserRouter>
+        <Cursor />
         <Toaster position="top-right" />
         <Routes>
           <Route path="/" element={<UserLayout />}>
