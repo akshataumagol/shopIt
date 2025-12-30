@@ -22,8 +22,8 @@ function CartDrawer({ drawerOpen, toggleCartDrawer }) {
   return (
     <div
       className={`fixed top-0 right-0 w-3/4 sm:w-1/2 md:w-[33rem] h-full bg-white shadow-lg
-        transform transition-transform duration-300 flex flex-col z-50
-        ${drawerOpen ? "translate-x-0" : "translate-x-full"} pointer-events-auto`}
+        transform transition-transform duration-300 flex flex-col z-[9998] pointer-events-auto
+        ${drawerOpen ? "translate-x-0" : "translate-x-full"}`}
     >
       <div className="flex justify-end p-4">
         <button onClick={toggleCartDrawer}>
@@ -53,6 +53,7 @@ function CartDrawer({ drawerOpen, toggleCartDrawer }) {
 }
 
 export default CartDrawer;
+
 
 /*import React from "react";
 import { IoMdClose } from "react-icons/io";
