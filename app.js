@@ -8,6 +8,7 @@ const productRoutes = require('./routes/products');
 const authRoutes = require('./routes/auth');
 const orderRoutes = require('./routes/orders');
 const filterRoutes = require("./routes/filterRoutes");
+const contactRoutes = require('./routes/contact'); 
 
 const app = express();
 
@@ -26,6 +27,7 @@ app.use('/api', productRoutes);
 app.use('/api/auth', authRoutes);
 app.use('/api/orders', orderRoutes);
 app.use("/api/filters", filterRoutes);
+app.use('/api/contact', contactRoutes);
 
 // Start server
 const PORT = process.env.PORT || 5000;
