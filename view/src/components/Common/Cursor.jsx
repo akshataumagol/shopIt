@@ -34,7 +34,7 @@ const Cursor = () => {
   return (
     <div
       className={`fixed top-0 left-0 w-6 h-6 rounded-full pointer-events-none z-50 transition-all duration-200 ease-out
-        ${hovered ? "bg-white opacity-80 scale-150" : "bg-white opacity-50 scale-100"}`}
+        ${hovered ? "bg-[rgb(234,46,14)] opacity-80 scale-150" : "bg-[rgb(234,46,14)] opacity-50 scale-100"}`}
       style={{
         transform: `translate3d(${position.x - 12}px, ${position.y - 12}px, 0)`, // Centered and smaller cursor
       }}
