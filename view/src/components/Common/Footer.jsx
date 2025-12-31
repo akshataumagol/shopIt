@@ -72,12 +72,12 @@ function Footer() {
               </Link>
             </li>
             <li>
-              <Link to="/faq" className='hover:text-gray-500 transition-colors'>
+              <Link to="/privacy" className='hover:text-gray-500 transition-colors'>
                 FAQ
               </Link>
             </li>
             <li>
-              <Link to="/features" className='hover:text-gray-500 transition-colors'>
+              <Link to="/TermsOfService" className='hover:text-gray-500 transition-colors'>
                 Features
               </Link>
             </li>
