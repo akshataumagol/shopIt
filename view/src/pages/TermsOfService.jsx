@@ -33,7 +33,7 @@ const TermsOfService = () => {
 
         {/* Changes to Terms */}
         <div>
-          <h2 className="text-2xl font-bold italic text-black">2. Changes to Terms</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">2. Changes to Terms</h2>
           <p className="text-lg text-gray-800">
             We reserve the right to modify or update these Terms at any time. When we do, we will post the updated Terms on this page and update the "Effective Date" at the top. Your continued use of the Service after such changes constitutes your acceptance of the revised Terms.
           </p>
@@ -41,7 +41,7 @@ const TermsOfService = () => {
 
         {/* Eligibility */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">3. Eligibility</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">3. Eligibility</h2>
           <p className="text-lg text-gray-800">
             You must be at least 13 years old to use our Service. By using the Service, you represent and warrant that you are at least 13 years of age. If you are under 18 years of age, you may only use the Service under the supervision of a parent or legal guardian.
           </p>
@@ -49,7 +49,7 @@ const TermsOfService = () => {
 
         {/* Account Creation */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">4. Account Creation</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">4. Account Creation</h2>
           <p className="text-lg text-gray-800">
             In order to access certain features of the Service, you may be required to create an account. You agree to provide accurate, current, and complete information when registering and to update such information as necessary.
           </p>
@@ -57,7 +57,7 @@ const TermsOfService = () => {
 
         {/* Use of Service */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">5. Use of Service</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">5. Use of Service</h2>
           <p className="text-lg text-gray-800">
             You agree to use the Service in compliance with all applicable local, state, national, and international laws and regulations. You may not use the Service to:
           </p>
@@ -72,7 +72,7 @@ const TermsOfService = () => {
 
         {/* Intellectual Property */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">6. Intellectual Property</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">6. Intellectual Property</h2>
           <p className="text-lg text-gray-800">
             All content on the Service, including text, graphics, logos, images, and software, is the property of ShopIt or its content suppliers and is protected by copyright, trademark, and other intellectual property laws. You may not use, reproduce, or distribute any content from the Service without our express written permission.
           </p>
@@ -80,7 +80,7 @@ const TermsOfService = () => {
 
         {/* Privacy */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">7. Privacy</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">7. Privacy</h2>
           <p className="text-lg text-gray-800">
             Your use of the Service is also governed by our <Link to="/privacy-policy" className="text-blue-500 hover:underline">Privacy Policy</Link>, which can be found [here]. By using the Service, you consent to the collection and use of your information as described in the Privacy Policy.
           </p>
@@ -88,7 +88,7 @@ const TermsOfService = () => {
 
         {/* Disclaimers */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">8. Disclaimers</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">8. Disclaimers</h2>
           <p className="text-lg text-gray-800">
             The Service is provided "as is" and "as available" without warranties of any kind, either express or implied, including but not limited to the implied warranties of merchantability, fitness for a particular purpose, or non-infringement.
           </p>
@@ -96,7 +96,7 @@ const TermsOfService = () => {
 
         {/* Limitation of Liability */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">9. Limitation of Liability</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">9. Limitation of Liability</h2>
           <p className="text-lg text-gray-800">
             To the fullest extent permitted by law, ShopIt and its affiliates will not be liable for any direct, indirect, incidental, special, consequential, or punitive damages, including but not limited to loss of profits, data, or use, arising out of your use of the Service.
           </p>
@@ -104,7 +104,7 @@ const TermsOfService = () => {
 
         {/* Termination */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">10. Termination</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">10. Termination</h2>
           <p className="text-lg text-gray-800">
             We may suspend or terminate your access to the Service at our sole discretion, without notice, for any reason, including without limitation if you violate these Terms. Upon termination, all provisions of these Terms which by their nature should survive termination shall survive.
           </p>
@@ -112,7 +112,7 @@ const TermsOfService = () => {
 
         {/* Indemnification */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">11. Indemnification</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">11. Indemnification</h2>
           <p className="text-lg text-gray-800">
             You agree to indemnify, defend, and hold harmless ShopIt, its officers, directors, employees, and agents from any claims, liabilities, damages, losses, and expenses (including legal fees) arising out of your use of the Service or violation of these Terms.
           </p>
@@ -120,7 +120,7 @@ const TermsOfService = () => {
 
         {/* Governing Law */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">12. Governing Law</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">12. Governing Law</h2>
           <p className="text-lg text-gray-800">
             These Terms shall be governed by and construed in accordance with the laws of India, without regard to its conflict of law principles. Any disputes arising out of or related to these Terms shall be resolved exclusively in the courts located in [Your Jurisdiction].
           </p>
@@ -128,7 +128,7 @@ const TermsOfService = () => {
 
         {/* Contact Information */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">13. Contact Information</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">13. Contact Information</h2>
           <p className="text-lg text-gray-800">
             If you have any questions or concerns about these Terms of Service, please contact us at:
           </p>
