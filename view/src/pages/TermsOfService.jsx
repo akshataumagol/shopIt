@@ -25,7 +25,7 @@ const TermsOfService = () => {
 
         {/* Acceptance of Terms */}
         <div>
-          <h2 className="text-3xl font-light italic text-black">1. Acceptance of Terms</h2>
+          <h2 className="text-2xl font-light italic text-black">1. Acceptance of Terms</h2>
           <p className="text-lg text-gray-800">
             By using this Service, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you are accessing the Service on behalf of an organization, you represent and warrant that you have the authority to bind such organization to these Terms.
           </p>
