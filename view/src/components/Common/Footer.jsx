@@ -73,12 +73,12 @@ function Footer() {
             </li>
             <li>
               <Link to="/privacy" className='hover:text-gray-500 transition-colors'>
-                FAQ
+                Privacy Policy
               </Link>
             </li>
             <li>
               <Link to="/TermsOfService" className='hover:text-gray-500 transition-colors'>
-                Features
+                Terms Of Service
               </Link>
             </li>
           </ul>
