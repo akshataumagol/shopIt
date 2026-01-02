@@ -12,7 +12,7 @@ const Privacy = () => {
       <section className="space-y-8">
         {/* Introduction */}
         <div>
-          <h2 className="text-3xl font-bold text-black">Introduction</h2>
+          <h2 className="text-1.5xl font-bold text-black">Introduction</h2>
           <p className="text-lg text-gray-800">
             Welcome to our Privacy Policy page. Your privacy is critically important to us. 
             At our website, we aim to protect your personal data and ensure that you understand how your information is used.
@@ -21,7 +21,7 @@ const Privacy = () => {
 
         {/* Information We Collect */}
         <div>
-          <h2 className="text-3xl font-bold text-black">Information We Collect</h2>
+          <h2 className="text-1.5xl font-bold text-black">Information We Collect</h2>
           <p className="text-lg text-gray-800">
             We may collect the following types of information:
           </p>
@@ -33,7 +33,7 @@ const Privacy = () => {
 
         {/* How We Use Your Information */}
         <div>
-          <h2 className="text-3xl font-bold text-black">How We Use Your Information</h2>
+          <h2 className="text-1.5xl font-bold text-black">How We Use Your Information</h2>
           <p className="text-lg text-gray-800">
             The information we collect is used for the following purposes:
           </p>
@@ -46,7 +46,7 @@ const Privacy = () => {
 
         {/* How We Protect Your Information */}
         <div>
-          <h2 className="text-3xl font-bold text-black">How We Protect Your Information</h2>
+          <h2 className="text-1.5xl font-bold text-black">How We Protect Your Information</h2>
           <p className="text-lg text-gray-800">
             We take reasonable measures to protect your personal information from unauthorized access, use, or disclosure.
           </p>
@@ -54,7 +54,7 @@ const Privacy = () => {
 
         {/* Your Rights */}
         <div>
-          <h2 className="text-3xl font-bold text-black">Your Rights</h2>
+          <h2 className="text-1.5xl font-bold text-black">Your Rights</h2>
           <p className="text-lg text-gray-800">
             You have the right to access, update, or delete your personal information. If you have any concerns about your data, feel free to contact us.
           </p>
@@ -62,7 +62,7 @@ const Privacy = () => {
 
         {/* Contact Us */}
         <div>
-          <h2 className="text-3xl font-bold text-black">Contact Us</h2>
+          <h2 className="text-1.5xl font-bold text-black">Contact Us</h2>
           <p className="text-lg text-gray-800">
             If you have any questions or concerns regarding this Privacy Policy, please contact us at{' '}
             <strong className="font-semibold text-blue-600">support@ShopIt.com</strong>.
