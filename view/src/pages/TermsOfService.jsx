@@ -14,9 +14,9 @@ const TermsOfService = () => {
       <section className="space-y-8">
         {/* Introduction */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">Introduction</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">Introduction</h2>
           <p className="text-lg text-gray-800">
-            Welcome to ShopIt! Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the [Your Website/App Name] website (the "Service") operated by [Your Company Name] ("us", "we", or "our").
+            Welcome to ShopIt! Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the ShopIt website (the "Service") operated by [Your Company Name] ("us", "we", or "our").
           </p>
           <p className="text-lg text-gray-800">
             By accessing or using the Service, you agree to be bound by these Terms. If you do not agree with any part of the Terms, you may not access the Service.
@@ -25,7 +25,7 @@ const TermsOfService = () => {
 
         {/* Acceptance of Terms */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">1. Acceptance of Terms</h2>
+          <h2 className="text-1.5xl font-bold italic text-black">1. Acceptance of Terms</h2>
           <p className="text-lg text-gray-800">
             By using this Service, you acknowledge that you have read, understood, and agree to be bound by these Terms. If you are accessing the Service on behalf of an organization, you represent and warrant that you have the authority to bind such organization to these Terms.
           </p>
@@ -33,7 +33,7 @@ const TermsOfService = () => {
 
         {/* Changes to Terms */}
         <div>
-          <h2 className="text-2xl font-light italic text-black">2. Changes to Terms</h2>
+          <h2 className="text-2xl font-bold italic text-black">2. Changes to Terms</h2>
           <p className="text-lg text-gray-800">
             We reserve the right to modify or update these Terms at any time. When we do, we will post the updated Terms on this page and update the "Effective Date" at the top. Your continued use of the Service after such changes constitutes your acceptance of the revised Terms.
           </p>
