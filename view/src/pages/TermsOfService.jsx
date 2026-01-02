@@ -33,7 +33,7 @@ const TermsOfService = () => {
 
         {/* Changes to Terms */}
         <div>
-          <h2 className="text-3xl font-light italic text-black">2. Changes to Terms</h2>
+          <h2 className="text-2xl font-bold italic text-black">2. Changes to Terms</h2>
           <p className="text-lg text-gray-800">
             We reserve the right to modify or update these Terms at any time. When we do, we will post the updated Terms on this page and update the "Effective Date" at the top. Your continued use of the Service after such changes constitutes your acceptance of the revised Terms.
           </p>
