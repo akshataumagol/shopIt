@@ -14,7 +14,7 @@ const TermsOfService = () => {
       <section className="space-y-8">
         {/* Introduction */}
         <div>
-          <h2 className="text-3xl font-light italic text-black">Introduction</h2>
+          <h2 className="text-1xl font-light italic text-black">Introduction</h2>
           <p className="text-lg text-gray-800">
             Welcome to ShopIt! Please read these Terms of Service ("Terms", "Terms of Service") carefully before using the [Your Website/App Name] website (the "Service") operated by [Your Company Name] ("us", "we", or "our").
           </p>
