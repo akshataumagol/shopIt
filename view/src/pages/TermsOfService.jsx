@@ -49,7 +49,7 @@ const TermsOfService = () => {
 
         {/* Account Creation */}
         <div>
-          <h2 className="text-1.5xl font-bold italic text-black">4. Account Creation</h2>
+          <h2 className="text-1.5xl font-bold text-black">4. Account Creation</h2>
           <p className="text-lg text-gray-800">
             In order to access certain features of the Service, you may be required to create an account. You agree to provide accurate, current, and complete information when registering and to update such information as necessary.
           </p>
